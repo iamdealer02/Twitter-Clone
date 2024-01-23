@@ -9,18 +9,20 @@ require('dotenv').config();
 
 const cors = require('cors');
 const session = require('express-session');
-
-
-
+const logger = require('../middleware/winston');
+const morgan = require('morgan');
+const notFound = require('../middleware/notFound');
+const healthCheck = require('../middleware/healthcheck');
 
 // Routes 
 
+
 // mongodb connection 
 try {
-    mongoose.connect("mongodb://localhost:27017/Airbnb");
-    console.log("Connected to MongoDB");
+    mongoose.connect("mongodb://localhost:27017/Twitter");
+    logger.info("Connected to MongoDB");
   } catch (error) {
-    console.log("Error connecting to MongoDB" + error);
+    logger.error("Error connecting to MongoDB" + error);
   }
 
 // Middleware + Route Registration
@@ -37,17 +39,22 @@ const registerCoreMiddleWare = async () => {
                 },
             })
         );
-
+        app.use(morgan('combined', { stream: logger.stream}));
         app.use(cors());
         app.use(helmet());
         app.use(express.json());
-
+        app.use(healthCheck);
        
         // Route registration
 
+
+        app.use(notFound);
+
+        logger.info("Done registering all middlewares and routes")
+
     }catch (error){
    
-        console.error(error, 'Error registering middlewares and routes' + JSON.stringify(error, undefined, 2));
+        logger.error(error, 'Error registering middlewares and routes' + JSON.stringify(error, undefined, 2));
     }
 };
 
@@ -56,7 +63,7 @@ const registerCoreMiddleWare = async () => {
 // error handler function to be used in the main
 const handleError =() => {
     process.on("uncaughtException", (error) => {
-        console.error(error, `Uncaught Exception occured : ${JSON.stringify(error.stack)}`);
+        logger.error(error, `Uncaught Exception occured : ${JSON.stringify(error.stack)}`);
         process.exit(1);
     });
 }
@@ -76,7 +83,7 @@ const startApp = async () => {
         handleError();
 
     }catch(err){
-        console.error(
+        logger.err(
             `startup:: Error while booting the application: ${JSON.stringify(
                 err,
                 undefined,
