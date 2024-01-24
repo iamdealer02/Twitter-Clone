@@ -2,6 +2,7 @@ const pg = require("pg");
 const logger = require("../../middleware/winston");
 
 //
+
 const db_config = {
     // use the env file later 
     user: process.env.DB_USER || 'postgres',
