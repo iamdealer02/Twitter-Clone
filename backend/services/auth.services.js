@@ -32,8 +32,15 @@ const register = async (req, res) => {
                 await client.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, [username, email, hashedPassword]);
 
                 logger.info('User registered successfully');
-                return res.status(statusCode.success)
-                    .json({ message: 'User created successfully' });
+                // login the user after registration
+                req.session.user = {
+                    email,
+                    username
+                };
+                const token = jwt.sign({ id: email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+                logger.info(`User: ${email} logged in successfully`);
+                return res.status(statusCode.success).json({ message: token });
+                
             }
         } catch (error) {
             logger.error('Error while executing the Query', error);
@@ -78,7 +85,7 @@ const login = async (req, res) => {
                         email: userRecord.email,
                         username: userRecord.username
                     };
-                    const token = jwt.sign({ id: userRecord.uid }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+                    const token = jwt.sign({ id: userRecord.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                     res.status(statusCode.success).json({ message: token });
                     logger.info(`User: ${userRecord.email} logged in successfully`);
                 }
