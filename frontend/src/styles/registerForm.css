@@ -1,0 +1,156 @@
+/* write css for all these bootstrap classes */
+.form-group {
+    margin-bottom: 1rem;
+}
+.h5{
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.mb-2{
+    margin-bottom: 0.5rem !important;
+}
+.bg-light{
+    background-color: #f8f9fa !important;
+}
+
+.btn{
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 9999px;
+    font-weight: 700;
+}
+.btn:hover{
+    color: #212529;
+    background-color: #edf3f9;
+    text-decoration: none;
+}
+.btn-info{
+    color: #fff;
+    background-color: rgb(29, 155, 240);
+    font-weight: 700;
+    border-color: #17a2b8;
+    border-radius: 9999px;
+}
+.btn-info:hover{
+    color: #fff;
+    background-color: #1389c4;
+    border-color: #117a8b;
+}
+
+a{  
+    text-decoration: none;
+
+}
+.btn-block{
+    display: block;
+    width: 100%;
+
+}
+
+body{
+    background-color: #23272b;
+    color: white;
+}
+
+.formLogo{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    
+
+}
+
+.logoDisplay{
+width: 30rem;
+height: 30rem;
+margin-top: 10rem;
+}
+.heading{
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+.subHeading{
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    
+}
+.registrationForm{
+    margin-top: 3rem;
+}
+input{
+    height: fit-content !important;
+    width: 92% !important;
+    font-size: small !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    margin-top: 0.25rem !important;
+}
+
+.loginDiv{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.LoginPagehr {
+    flex-grow: 1;
+    margin: 0 2px;
+    border-top: 1px solid #f0eeee;
+  }
+.or-text{
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.loginMethod{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.pageFooter{
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.loader{
+    /* sets a loading screen */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:'https://cdn-icons-gif.flaticon.com/10282/10282582.gif' ;
+}
