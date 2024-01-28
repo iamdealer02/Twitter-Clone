@@ -3,7 +3,6 @@ const statusCode = require('../constants/statusCode');
 const logger = require('../middleware/winston');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const userDetailsSchema = require('../models/userDetails');
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
