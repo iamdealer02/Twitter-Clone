@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
 export default function LoginForm() {
     const {dispatch} = useAppStateContext();
     const navigate = useNavigate();
@@ -34,12 +36,12 @@ export default function LoginForm() {
            
         instance.post(requests.login, userObj)
             .then((response) => {
-                
                 dispatch({
                     type: 'Login',
                     payload:{
                         token: response.data.message,
-                        user: userObj.user
+                        email: response.data.email,
+                        username: response.data.username
                     },
                 });
                 navigate('/home')
@@ -129,7 +131,9 @@ export default function LoginForm() {
 
                 
                 <div className="pageFooter">Don't have an account? </div>
-                <a href='' ><button className="btn btn-info btn-block ">Register</button></a>
+                {/* use navigator */}
+                
+                <button className="btn btn-info btn-block " onClick={ () => navigate('/register')} >Register</button>
     </div>
 
 

@@ -49,8 +49,8 @@ export default function RegisterForm() {
             }) 
             .catch((error) => {
                 setLoader(false)
-                console.log(error.message);
-                notify(error.message);
+            
+                notify(error.response.data.message);
             });
         }
     }; 
@@ -151,7 +151,7 @@ export default function RegisterForm() {
                 </div>
                 
                 <div className="pageFooter">Already have an account? </div>
-                <a href='' ><button className="btn btn-info btn-block ">Login</button></a>
+                <button className="btn btn-info btn-block " onClick={()=> navigate('/login')}>Login</button>
     </div>
 
 

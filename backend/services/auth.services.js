@@ -3,6 +3,7 @@ const statusCode = require('../constants/statusCode');
 const logger = require('../middleware/winston');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const userDetailsSchema = require('../models/userDetails');
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -30,13 +31,14 @@ const register = async (req, res) => {
 
                 // insert user into the database with hashed password
                 await client.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, [username, email, hashedPassword]);
-
+                
                 logger.info('User registered successfully');
                 // login the user after registration
                 req.session.user = {
                     email,
                     username
                 };
+
                 const token = jwt.sign({ id: email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                 logger.info(`User: ${email} logged in successfully`);
                 return res.status(statusCode.success).json({ message: token });
@@ -86,7 +88,7 @@ const login = async (req, res) => {
                         username: userRecord.username
                     };
                     const token = jwt.sign({ id: userRecord.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-                    res.status(statusCode.success).json({ message: token });
+                    res.status(statusCode.success).json({ message: token , username: userRecord.username, email: userRecord.email});
                     logger.info(`User: ${userRecord.email} logged in successfully`);
                 }
             }
