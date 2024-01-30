@@ -16,6 +16,7 @@ const healthCheck = require('../middleware/healthcheck');
 
 // Routes 
 const authRoutes = require('../routes/auth.routes');
+const profileRoutes = require('../routes/profile.routes');
 
 // mongodb connection 
 try {
@@ -46,7 +47,8 @@ const registerCoreMiddleWare = async () => {
         app.use(healthCheck);
        
         // Route registration
-        app.use('/auth', authRoutes)
+        app.use('/auth', authRoutes);
+        app.use('/profile', profileRoutes);
 
         app.use(notFound);
 
