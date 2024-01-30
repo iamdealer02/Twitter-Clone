@@ -14,7 +14,6 @@ export default function LoginForm() {
     const navigate = useNavigate();
     
     const notify = (message) => toast.error(message); 
-  
 
     const [userObj, setUserObj] = useState({
         user: '',
@@ -97,7 +96,7 @@ export default function LoginForm() {
                 Enter you email or username?
             </label>
             <input 
-                className="form-control bg-light"
+                className="form-control bg-light input"
                 type="text"
                 id="user"
                 placeholder="Enter your email or username"
@@ -109,7 +108,7 @@ export default function LoginForm() {
         <div className="form-group">
           <label htmlFor="password" className='h5'>Password</label>
           <input
-            className="form-control bg-light"
+            className="form-control bg-light input"
             id="password"
             placeholder="Enter your password"
             type="password"
