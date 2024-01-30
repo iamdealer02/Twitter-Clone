@@ -38,7 +38,7 @@ const register = async (req, res) => {
                     username
                 };
 
-                const token = jwt.sign({ id: email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+                const token = jwt.sign({ id: username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                 logger.info(`User: ${email} logged in successfully`);
                 return res.status(statusCode.success).json({ message: token });
                 
@@ -86,7 +86,7 @@ const login = async (req, res) => {
                         email: userRecord.email,
                         username: userRecord.username
                     };
-                    const token = jwt.sign({ id: userRecord.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+                    const token = jwt.sign({ id: userRecord.username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                     res.status(statusCode.success).json({ message: token , username: userRecord.username, email: userRecord.email});
                     logger.info(`User: ${userRecord.email} logged in successfully`);
                 }

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = 8080; //USE env file later
 require('dotenv').config(); 
+const bodyParser = require('body-parser');
+
 
 // custom middleware
 
@@ -16,7 +18,7 @@ const healthCheck = require('../middleware/healthcheck');
 
 // Routes 
 const authRoutes = require('../routes/auth.routes');
-
+const tweetRoutes = require('../routes/tweet.routes')
 // mongodb connection 
 try {
     mongoose.connect("mongodb://localhost:27017/Twitter");
@@ -39,6 +41,9 @@ const registerCoreMiddleWare = async () => {
                 },
             })
         );
+                // Increase payload size limit to 50MB
+        app.use(bodyParser.json({ limit: '50mb' }));
+        app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
         app.use(morgan('combined', { stream: logger.stream}));
         app.use(cors());
         app.use(helmet());
@@ -47,7 +52,7 @@ const registerCoreMiddleWare = async () => {
        
         // Route registration
         app.use('/auth', authRoutes)
-
+        app.use('/tweet', tweetRoutes)
         app.use(notFound);
 
         logger.info("Done registering all middlewares and routes")
