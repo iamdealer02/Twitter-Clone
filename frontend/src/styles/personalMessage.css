@@ -1,0 +1,24 @@
+.noPersonalMessageSelected{
+    /* center the content vertically */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50%;
+    padding: 10%;
+}
+.noPersonalMessageSelected span{
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #f6f6f7;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+.noPersonalMessageSelected div{
+    font-size: 1rem;
+    font-weight: 400;
+    color: #8b8b8e;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}

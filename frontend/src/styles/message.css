@@ -1,0 +1,22 @@
+.messageContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 10rem;
+    padding-left: 10rem;
+    padding-bottom: 2rem;
+    height: 100vh;
+
+}
+
+.messageFeed{
+    flex: 2;
+    border: rgb(47, 51, 54) solid 1px;
+}
+.personalMessage{
+    flex: 2;
+    border: rgb(47, 51, 54) solid 1px;
+}
+.messageTaskbar{
+    flex: 1;
+}
