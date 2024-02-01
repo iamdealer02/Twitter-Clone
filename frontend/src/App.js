@@ -4,6 +4,7 @@ import LoginPage from './views/LoginPage';
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
 import HomePage from './views/HomePage';
+
 import ProfilePage from './views/ProfilePage';
 import MessagePage from './views/MessagePage';
 
@@ -20,12 +21,10 @@ function App() {
           <Route element={<PrivateRoute/>}>
             <Route path="/home" element={<HomePage/>}/>
           </Route>
+
           <Route element={<PrivateRoute />}>
            <Route path={`/profile/:username`} element={<ProfilePage />} />
           </Route>
-
-
-          
           <Route element={<PrivateRoute/>}>
             <Route path="/messages" element={<MessagePage/>}/>
           </Route>
