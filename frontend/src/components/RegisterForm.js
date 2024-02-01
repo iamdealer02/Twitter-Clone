@@ -91,7 +91,7 @@ export default function RegisterForm() {
                 What is your email?
             </label>
             <input 
-                className="form-control bg-light"
+                className="form-control bg-light input"
                 type="text"
                 id="email"
                 placeholder="Enter your email"
@@ -104,7 +104,7 @@ export default function RegisterForm() {
                 Choose a username
             </label>
             <input 
-                className="form-control bg-light"
+                className="form-control bg-light input"
                 type="text"
                 id="username"
                 placeholder="Enter your preferred username"
@@ -115,7 +115,7 @@ export default function RegisterForm() {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-            className="form-control bg-light"
+            className="form-control bg-light input"
             id="password"
             placeholder="Enter your password"
             type="password"
