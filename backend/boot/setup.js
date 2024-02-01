@@ -5,16 +5,23 @@ const app = express();
 const PORT = 8080; //USE env file later
 require('dotenv').config(); 
 const bodyParser = require('body-parser');
+const {Server} = require('socket.io');
 
 
 // custom middleware
 
-const cors = require('cors');
+const cors = require('cors');  
+
+
+const http = require('http');
 const session = require('express-session');
 const logger = require('../middleware/winston');
 const morgan = require('morgan');
 const notFound = require('../middleware/notFound');
 const healthCheck = require('../middleware/healthcheck');
+
+// create a server
+const server = http.createServer(app);
 
 // Routes 
 const authRoutes = require('../routes/auth.routes');
@@ -73,18 +80,34 @@ const handleError =() => {
     });
 }
 
+
+
+
 // start server 
 
 const startApp = async () => {
     try {
         // start by running the middleware registeration
         await registerCoreMiddleWare();
+        const io = new Server(app, {
+            cors: {
+                origin: 'http://localhost:3000',
+                methods: ['GET', 'POST']
+            }
+        })
+        io.on("connection", (socket) => {
+            console.log(socket.id);
+        
+            socket.on("disconnect", () => {
+                console.log("User disconnected", socket.id);
+            })
+        })
+        
 
         app.listen(PORT, () => {
             // log the information
             console.log(`Server started on port ${PORT}`);
         })
-        // handle errors with function
         handleError();
 
     }catch(err){

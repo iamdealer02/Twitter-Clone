@@ -5,10 +5,13 @@ import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
 import HomePage from './views/HomePage';
 import MessagePage from './views/MessagePage';
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:8080");
 
 function App() {
-  return (
-      
+
+
+  return ( 
         <Routes>
           <Route element={<PublicRoute/>}>
             <Route path="/register" element={<RegistrationPage/>}/>
