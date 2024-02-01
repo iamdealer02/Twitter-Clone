@@ -1,0 +1,49 @@
+.messageHeader span{
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f6f6f7;
+    margin-left: 1rem;
+
+}
+.messageHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    
+}
+.messageList{
+    padding: 3%;
+    margin: 5%;
+}
+.noMessage div{
+    font-size: 1rem;
+    font-weight: 400;
+    color: #8b8b8e;
+    margin-left: 1rem;
+    margin-top: 1rem;
+
+}
+.noMessage span{
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #f6f6f7;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+.startNewMessage button{
+    background-color: #1da1f2;
+    color: #fffefe;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 0.5rem 1rem;
+    margin-top: 2rem;
+    cursor: pointer;
+    border: none;
+    width: 200px;
+    height: 50px;
+    margin-left: 1rem;
+}

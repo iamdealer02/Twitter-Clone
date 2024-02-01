@@ -5,6 +5,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
 import HomePage from './views/HomePage';
 import ProfilePage from './views/ProfilePage';
+import MessagePage from './views/MessagePage';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
 
 
           
+          <Route element={<PrivateRoute/>}>
+            <Route path="/messages" element={<MessagePage/>}/>
+          </Route>
         </Routes>
   );
 }
