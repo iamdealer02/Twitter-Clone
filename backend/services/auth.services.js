@@ -86,7 +86,9 @@ const login = async (req, res) => {
                         email: userRecord.email,
                         username: userRecord.username
                     };
-                    const token = jwt.sign({ id: userRecord.username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+                    
+                console.log(req.session.user)
+                    const token = jwt.sign({ id: userRecord.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                     res.status(statusCode.success).json({ message: token , username: userRecord.username, email: userRecord.email});
                     logger.info(`User: ${userRecord.email} logged in successfully`);
                 }
