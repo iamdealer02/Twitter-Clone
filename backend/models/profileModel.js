@@ -10,10 +10,7 @@ const profileSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  bio: {
-    type: String,
-    trim: true,
-  },
+
   profile_picture: {
     type: Buffer,
   },
@@ -21,6 +18,8 @@ const profileSchema = new mongoose.Schema({
   cover_picture: {
     type: Buffer,
   },
+
+
 
   
 });

@@ -10,7 +10,9 @@ export default function Profile() {
     bio: '',
     profile_pic: '',
     cover_pic: '',
-    username: ''
+    username: '',
+    joined_date: '',
+    location : ''
   });
 
   const notify = (message) => toast.error(message);
@@ -34,6 +36,10 @@ export default function Profile() {
           const userData = userArray[0];
           console.log('user data:', userData);
 
+          const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
+
+
+
 
 
           //update the components state with extracted data from backend      
@@ -43,6 +49,9 @@ export default function Profile() {
             profile_pic: userData.profile_pic,
             cover_pic: userData.cover_pic,
             bio: userData.bio,
+            joined_date : joinedDate,
+            location : userData.location,
+
           });
         } else {
           
@@ -73,12 +82,14 @@ export default function Profile() {
 
       <div className="bio">{userProfileObj.bio}</div>
 
+      
+
     
-      <div className="joined-date"></div>
+      <div className="joined-date">Joined {userProfileObj.joined_date}</div>
+      <div className="location"> {userProfileObj.location}</div>
       <div className="following"></div>
       <div className="followers"></div>
-      <div className="posts"></div>
-      <div className="media"></div>
+
       
       <ToastContainer />
     </div>
