@@ -7,8 +7,7 @@ import HomePage from './views/HomePage';
 
 import ProfilePage from './views/ProfilePage';
 import MessagePage from './views/MessagePage';
-import io from "socket.io-client";
-const socket = io.connect("http://localhost:8080");
+
 
 function App() {
 
@@ -29,7 +28,11 @@ function App() {
            <Route path={`/profile/:username`} element={<ProfilePage />} />
           </Route>
           <Route element={<PrivateRoute/>}>
+            {/* pass socket */}
             <Route path="/messages" element={<MessagePage/>}/>
+          </Route>
+          <Route element={<PrivateRoute/>}>
+            <Route path="/messages/:username" element={<MessagePage/>}/>
           </Route>
         </Routes>
   );

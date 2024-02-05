@@ -1,0 +1,29 @@
+.chatList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+  }
+  
+ 
+  
+  .sent-message {
+    background-color: #3dbdf4; /* Example background color for sent messages */
+    color: #fffefe; /* Example text color for sent messages */
+    border-radius: 9999px;
+    padding: 8px 12px;
+    max-width: 70%; /* Adjust the width as needed */
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
+  
+  .received-message {
+    background-color: #3dbdf4; /* Example background color for received messages */
+    color: #fffefe; /* Example text color for received messages */
+    border-radius: 9999px;
+    padding: 8px 12px;
+    max-width: 70%; /* Adjust the width as needed */
+    align-self: flex-start;
+    margin-bottom: 10px;
+  }
+  
