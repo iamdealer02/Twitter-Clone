@@ -20,6 +20,8 @@ const healthCheck = require('../middleware/healthcheck');
 const authRoutes = require('../routes/auth.routes');
 const profileRoutes = require('../routes/profile.routes');
 const tweetRoutes = require('../routes/tweet.routes')
+//const tweetServices = require('../services/tweet.services')
+
 // mongodb connection 
 try {
     mongoose.connect("mongodb://localhost:27017/Twitter");
