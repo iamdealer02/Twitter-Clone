@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
-import { requests } from '../constants/requests'  // api endpoints
+import requests from '../constants/requests'  // api endpoints
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

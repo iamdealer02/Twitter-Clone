@@ -13,8 +13,12 @@
     flex: 1;
 }
 .homeFeed{
-    flex: 3;
+    flex: 5;
+    min-height: auto;
 }
 .homeWidgets{
-    flex: 2;
+    flex: 3;
+}
+.homeNewsFeed{
+    flex-direction: column;
 }

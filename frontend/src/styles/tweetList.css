@@ -1,0 +1,136 @@
+/* tweetBody.css */
+.news-feed {
+    max-width: 2000px;
+    margin: 50 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .tweet-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .tweet-card {
+    background: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .tweet-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .tweet-header img {
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .tweet-header .username {
+    font-weight: bold;
+    color: #1DA1F2;
+  }
+  
+  .tweet-content {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #ebf0f5;
+  }
+  
+  .tweet-timestamp {
+    color: #2c3033;
+    font-size: 12px;
+    margin-top: 10px;
+    padding: 15px;
+  }
+  
+  .tweet-interactions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .tweet-interaction-btn {
+    background: none;
+    border: none;
+    color: #657786;
+    cursor: pointer;
+  }
+  
+  .tweet-interaction-btn:hover {
+    text-decoration: underline;
+  }
+  
+  .tweet-metadata {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #657786;
+    margin-top: 10px;
+  }
+  
+  .tweet-metadata span {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .tweet-metadata .icon {
+    margin-right: 5px;
+  }
+  .tweet-interactions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 1px solid #e1e8ed;
+    border-bottom: 1px solid #e1e8ed;
+  }
+  
+  .tweet-interaction-btn {
+    background: none;
+    border: none;
+    color: #657786;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+/* Add this to your tweetBody.css or equivalent stylesheet */
+
+.tweet-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    border-top: none; /* Ensure no border is shown */
+  }
+  
+  .tweet-interaction-btn {
+    background: transparent;
+    border: none;
+    color: #fff; /* or any color that matches your design */
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+  
+  .tweet-interaction-btn:hover {
+    background: rgba(255, 255, 255, 0.1); /* Slight highlight on hover */
+  }
+  
+  /* If you are using icons, you might need additional styling */
+  .icon {
+    margin-right: 5px; /* Space between icon and text */
+  }
+  
+  
+  /* Optional: Add specific styling for each type of button if needed */
+  .tweet-interaction-btn.comment { /* Styles for comment button */ }
+  .tweet-interaction-btn.retweet { /* Styles for retweet button */ }
+  .tweet-interaction-btn.like { /* Styles for like button */ }
+  .tweet-interaction-btn.bookmark { /* Styles for bookmark button */ }
+  

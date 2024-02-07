@@ -2,6 +2,8 @@ import React from 'react'
 import '../styles/homePage.css'
 import TaskBar from '../components/TaskBar'
 import AddTweetBox from '../components/AddTweetBox'
+import TweetBody from '../components/TweetList'
+
 
 
 function HomePage() {
@@ -16,6 +18,8 @@ function HomePage() {
                 {/* add a following and a for you section before */}
                 {/* addTweetBox */}
                 <AddTweetBox/>
+            <div className='homeNewsFeed'></div>
+                <TweetBody/>
                 
             </div>
             <div className='homeWidgets'>
