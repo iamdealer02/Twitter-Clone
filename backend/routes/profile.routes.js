@@ -5,6 +5,9 @@ const profileTweetServices = require('../services/profile.tweet.services')
 
 
 router.get('/:username', profileServices.getUserProfile);
+router.post('/follow/:followedUserId', profileServices.followUser);
+router.get('/:username/followers', profileServices.getFollowers);
+router.get('/:username/followings', profileServices.getFollowings);
 router.post('/edit/:username', profileServices.editUserProfile);
 router.post('/addBookmark/:bookmarks', profileServices.postBookmarks);
 router.get('/bookmarks/:username', profileServices.getBookmarks)

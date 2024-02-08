@@ -41,9 +41,6 @@ const profileSchema = new mongoose.Schema({
   }]
 
 
-
-
-
   
 });
 

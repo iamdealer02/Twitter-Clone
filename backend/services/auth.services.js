@@ -3,6 +3,7 @@ const statusCode = require('../constants/statusCode');
 const logger = require('../middleware/winston');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const ProfileModel = require('../models/profileModel');
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -13,6 +14,7 @@ const register = async (req, res) => {
         const client = await pool.connect();
         try {
             // check if user already exists
+
             const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
             if (result.rows.length > 0) {
                 return res.status(statusCode.userAlreadyExists)
@@ -30,7 +32,11 @@ const register = async (req, res) => {
 
                 // insert user into the database with hashed password
                 await client.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, [username, email, hashedPassword]);
-                
+                // put the username in the profile MongoDB
+                const newProfile = new ProfileModel({
+                    username,
+                });
+                await newProfile.save();
                 logger.info('User registered successfully');
                 // login the user after registration
                 req.session.user = {

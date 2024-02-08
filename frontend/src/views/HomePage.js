@@ -2,7 +2,7 @@ import React from 'react'
 import '../styles/homePage.css'
 import TaskBar from '../components/TaskBar'
 import AddTweetBox from '../components/AddTweetBox'
-
+import SearchBar from '../components/SearchBar'
 
 function HomePage() {
   return (
@@ -19,8 +19,7 @@ function HomePage() {
                 
             </div>
             <div className='homeWidgets'>
-                
-
+                <SearchBar/>
             </div>
         </div>
     </div>
