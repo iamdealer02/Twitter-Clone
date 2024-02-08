@@ -6,4 +6,5 @@ export const requests = {
     getChatHistory: "/chat/get",
     getPeopleList: "/chat",
     isReceiverValid: "/chat/validate",
+    searchUser: "/search"
 }
