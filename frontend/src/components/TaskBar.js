@@ -1,7 +1,10 @@
 import React from 'react'
 import '../styles/taskbar.css'
+import { useNavigate } from 'react-router-dom'
 
 export default function TaskBar() {
+    const username = JSON.parse(localStorage.getItem('user')).username;
+    const navigate = useNavigate();
   return (
     <div>
         <div className='taskBarContainer'>
@@ -21,7 +24,7 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText'>
+                <div className='taskBarText' onClick={ () => navigate(`/home`)}>
                     Home
                 </div>
             </div>
@@ -105,12 +108,12 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText'>
+                <div className='taskBarText' onClick={ () => navigate(`/profile/${username}`)}>
                     Profile
                 </div>
             </div>
             <div className='taskBarPostButton'>
-                <button className='taskBarPostBtn'>
+                <button className='taskBarPostBtn' onClick={ () => navigate(`/home`)}>
                     Post
                 </button>
             </div>

@@ -4,7 +4,6 @@ import TaskBar from '../components/TaskBar'
 import Profile from '../components/Profile'
 
 
-
 function ProfilePage() {
   return (
     <div>

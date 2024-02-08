@@ -7,6 +7,7 @@ import HomePage from './views/HomePage';
 
 import ProfilePage from './views/ProfilePage';
 import MessagePage from './views/MessagePage';
+import EditProfilePage from './views/EditProfilePage';
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
           </Route>
           <Route element={<PrivateRoute/>}>
             <Route path="/messages" element={<MessagePage/>}/>
+          </Route>
+
+          <Route element={<PrivateRoute />}>
+           <Route path={`/profile/edit/:username`} element={<EditProfilePage />} />
           </Route>
         </Routes>
   );
