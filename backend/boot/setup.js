@@ -33,6 +33,7 @@ const authRoutes = require('../routes/auth.routes');
 const profileRoutes = require('../routes/profile.routes');
 const tweetRoutes = require('../routes/tweet.routes');
 const chatRoutes = require('../routes/message.routes');
+const searchRoutes = require('../routes/search.routes');
 
 
 // mongodb connection 
@@ -69,6 +70,7 @@ const registerCoreMiddleWare = async () => {
         app.use('/profile', profileRoutes);
         app.use('/tweet', tweetRoutes)
         app.use('/chat', chatRoutes);
+        app.use('/search', searchRoutes);
     //    chat using Socket.io
         createSocketServer(io);
     // Route registration

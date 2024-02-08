@@ -18,9 +18,17 @@ const profileSchema = new mongoose.Schema({
   cover_picture: {
     type: Buffer,
   },
+  followers: [{ 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user_details'
+  
+  }],
 
-
-
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user_details'
+  
+  }]
   
 });
 
