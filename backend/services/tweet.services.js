@@ -10,6 +10,7 @@ const mediaToBuffer = async (mediaData) => {
 };
 
 
+
 const createTweet = async (req, res) => {
     const { tweet, image, gif, poll, emoji, schedule } = req.body;
     // get the token from the request header
@@ -17,6 +18,7 @@ const createTweet = async (req, res) => {
     // decode the token to get the user id
     const decodedToken = jwt.decode(token);
     const username = decodedToken.id;
+    console.log(username)
     // if the token is invalid, return an error
     if (!decodedToken) {
         return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
