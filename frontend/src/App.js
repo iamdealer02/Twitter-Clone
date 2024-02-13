@@ -8,9 +8,11 @@ import HomePage from './views/HomePage';
 import ProfilePage from './views/ProfilePage';
 import MessagePage from './views/MessagePage';
 
+
 function App() {
-  return (
-      
+
+
+  return ( 
         <Routes>
           <Route element={<PublicRoute/>}>
             <Route path="/register" element={<RegistrationPage/>}/>
@@ -26,7 +28,11 @@ function App() {
            <Route path={`/profile/:username`} element={<ProfilePage />} />
           </Route>
           <Route element={<PrivateRoute/>}>
+            {/* pass socket */}
             <Route path="/messages" element={<MessagePage/>}/>
+          </Route>
+          <Route element={<PrivateRoute/>}>
+            <Route path="/messages/:username" element={<MessagePage/>}/>
           </Route>
         </Routes>
   );

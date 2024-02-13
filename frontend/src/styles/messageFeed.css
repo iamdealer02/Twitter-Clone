@@ -47,3 +47,19 @@
     height: 50px;
     margin-left: 1rem;
 }
+
+.person{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2%;
+    border-bottom: rgb(47, 51, 54) solid 1px;
+    border-top: rgb(47, 51, 54) solid 1px;
+    cursor: pointer;
+    color: white;
+}
+.active{
+    background-color: rgb(32, 35, 39) ;
+    border-right: 2px solid #1da1f2;
+}

@@ -7,7 +7,7 @@ import instance from '../constants/axios';
 import { requests } from '../constants/requests'  // api endpoints
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import SearchBar from '../components/SearchBar'
 
 function HomePage() {
     const notify = (message) => toast.error(message); 
@@ -101,8 +101,7 @@ function HomePage() {
                 
             </div>
             <div className='homeWidgets'>
-                
-
+                <SearchBar/>
             </div>
         </div>
     </div>
