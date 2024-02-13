@@ -12,12 +12,22 @@ const profileSchema = new mongoose.Schema({
   },
 
   profile_picture: {
-    type: Buffer,
+    data: Buffer, 
+    contentType: String,
   },
 
   cover_picture: {
-    type: Buffer,
+    data: Buffer, 
+    contentType: String,
+  
   },
+
+  bookmarks:[ {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Tweet' 
+  
+  }],
+
   followers: [{ 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user_details'
@@ -28,7 +38,14 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user_details'
   
-  }]
+  }],
+
+  is_monetized: {
+    type: Boolean,
+    default: false
+},
+
+
   
 });
 

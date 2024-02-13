@@ -2,7 +2,7 @@ import React from 'react'
 import '../styles/homePage.css'
 import TaskBar from '../components/TaskBar'
 import Profile from '../components/Profile'
-
+import SearchBar from '../components/SearchBar'
 
 
 function ProfilePage() {
@@ -36,7 +36,8 @@ function ProfilePage() {
                 
             </div>
 
-            <div className='profileWidgets'>               
+            <div className='profileWidgets'>    
+            <SearchBar/>           
 
             </div>
         </div>

@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
 const http = require('http'); // Import http module
 const { createSocketServer } = require('../sockets/socket');
+const jwt = require('jsonwebtoken')
 
 
 // custom middleware
@@ -18,6 +19,9 @@ const logger = require('../middleware/winston');
 const morgan = require('morgan');
 const notFound = require('../middleware/notFound');
 const healthCheck = require('../middleware/healthcheck');
+const uploadMiddleware  = require('../middleware/multer');
+
+
 
 // create a server
 const server = http.createServer(app);
@@ -34,6 +38,8 @@ const profileRoutes = require('../routes/profile.routes');
 const tweetRoutes = require('../routes/tweet.routes');
 const chatRoutes = require('../routes/message.routes');
 const searchRoutes = require('../routes/search.routes');
+const settingsRoutes = require('../routes/settings.routes');
+
 
 
 //const tweetServices = require('../services/tweet.services')
@@ -70,16 +76,23 @@ const registerCoreMiddleWare = async () => {
 
         app.use(helmet());
         app.use(healthCheck);
+        // app.use(uploadMiddleware);
+
         app.use('/auth', authRoutes);
         app.use('/profile', profileRoutes);
         app.use('/tweet', tweetRoutes)
         app.use('/chat', chatRoutes);
         app.use('/search', searchRoutes);
+        app.use('/settings', settingsRoutes);
+
+        
     //    chat using Socket.io
         createSocketServer(io);
     // Route registration
 
         app.use(notFound);
+
+
 
         logger.info("Done registering all middlewares and routes")
 
@@ -88,6 +101,9 @@ const registerCoreMiddleWare = async () => {
     }
 };
 
+
+
+
 // error handler function to be used in the main
 const handleError = () => {
     process.on("uncaughtException", (error) => {
@@ -95,6 +111,10 @@ const handleError = () => {
         process.exit(1);
     });
 }
+
+
+
+
 
 // start server 
 const startApp = async () => {
@@ -123,4 +143,8 @@ const startApp = async () => {
     }
 };
 
+
+
+
 module.exports = { startApp };
+

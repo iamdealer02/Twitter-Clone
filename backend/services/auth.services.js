@@ -37,6 +37,9 @@ const register = async (req, res) => {
 
                 const newProfile = new ProfileModel({
                     username,
+                    profile_picture: null,
+                    cover_picture: null,
+    
                 });
                 req.session.profileId = newProfile._id;
                 req.session.save();

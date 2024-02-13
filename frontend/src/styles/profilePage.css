@@ -30,14 +30,14 @@
 
 }
  
-.cover-pic{
+.cover-picture{
     background-color: #8f8f8f;
     background-size: cover;
     background-position: center;
     height: 200px;
 }
   
-.profile-pic {
+.profile-picture {
     width: 120px;
     height: 120px;
     background-size: cover;    
@@ -54,8 +54,23 @@
     color: rgb(239, 243, 244);
     font-weight: 700;
 
-
 }
+
+
+.follow-btn button {
+
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.following-btn button {
+
+  background-color: #30313390;
+  color: #ffffff;
+}
+
+
+
 .edit-profile button{
     margin-top: 20%;
     border-radius: 9999px;
@@ -80,15 +95,11 @@
     margin-top: 5px;
   }
 
-  .followers {
+  .followers-followings {
     color: #555;
     margin-top: 5px;
   }
 
-  .followings {
-    color: #555;
-    margin-top: 5px;
-  }
 
   .joined-date {
     color: #555;

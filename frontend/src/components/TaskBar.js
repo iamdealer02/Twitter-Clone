@@ -1,7 +1,10 @@
 import React from 'react'
 import '../styles/taskbar.css'
+import { useNavigate } from 'react-router-dom'
 
 export default function TaskBar() {
+    const username = JSON.parse(localStorage.getItem('user')).username;
+    const navigate = useNavigate();
   return (
     <div>
         <div className='taskBarContainer'>
@@ -21,7 +24,7 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText'>
+                <div className='taskBarText' onClick={ () => navigate(`/home`)}>
                     Home
                 </div>
             </div>
@@ -49,7 +52,7 @@ export default function TaskBar() {
                     Notifications
                 </div>
             </div>
-            <div className='taskBarMessages taskbarUtil'>
+            <div className='taskBarMessages taskbarUtil'onClick={ () => navigate(`/messages`)}>
             <div >
                     <svg className='taskBarIcon' viewBox="0 0 24 24" fill="#ffffff">
                         <g>
@@ -97,7 +100,7 @@ export default function TaskBar() {
                     Community
                 </div>
             </div>
-            <div className='taskBarProfile taskbarUtil'>
+            <div className='taskBarProfile taskbarUtil' onClick={ () => navigate(`/profile/${username}`)}>
             <div >
                     <svg className='taskBarIcon' viewBox="0 0 24 24" fill="#ffffff">
                         <g>
@@ -105,12 +108,28 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText'>
+                <div className='taskBarText' onClick={ () => navigate(`/profile/${username}`)}>
                     Profile
                 </div>
             </div>
+
+            <div className="taskBarMore taskbarUtil" onClick={ () => navigate(`/settings/${username}`)}>
+                <div>
+                <svg className='taskBarIcon' viewBox="0 0 24 24" fill="#ffffff">
+                
+                    <circle cx="5" cy="12" r="2"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                    <circle cx="19" cy="12" r="2"></circle>
+
+                </svg>
+                </div>
+                <div className="taskBarText"onClick={ () => navigate(`/settings/${username}`)}>
+                    More
+                </div>
+
+            </div>
             <div className='taskBarPostButton'>
-                <button className='taskBarPostBtn'>
+                <button className='taskBarPostBtn' onClick={ () => navigate(`/home`)}>
                     Post
                 </button>
             </div>
