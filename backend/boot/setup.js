@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = 8080; //USE env file later
 const SOCKET_PORT = 3001;
-require('dotenv').config(); 
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
 const http = require('http'); // Import http module
@@ -42,6 +42,8 @@ const settingsRoutes = require('../routes/settings.routes');
 
 
 
+//const tweetServices = require('../services/tweet.services')
+
 // mongodb connection 
 try {
     mongoose.connect("mongodb://localhost:27017/Twitter");
@@ -53,24 +55,26 @@ try {
 // Middleware + Route Registration
 const registerCoreMiddleWare = async () => {
     try {
+        app.use(cors({
+            origin: 'http://localhost:3000',
+            credentials: true,
+        }));
         app.use(
             session({
-                secret: 'secret',
+                secret: '64534847638dgfhjvfgdyucgt78r6g', 
                 resave: false,
-                saveUninitialized: true,
+                saveUninitialized: true, 
                 cookie: {
-                    secure: false,
+                    secure: false, 
                     httpOnly: true,
                 },
             })
         );
-        // Increase payload size limit to 50MB
-        app.use(bodyParser.json({ limit: '50mb' }));
-        app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-        app.use(morgan('combined', { stream: logger.stream}));
-        app.use(cors());
-        app.use(helmet());
         app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(morgan('combined', { stream: logger.stream }));
+
+        app.use(helmet());
         app.use(healthCheck);
         // app.use(uploadMiddleware);
 
@@ -127,8 +131,8 @@ const startApp = async () => {
         });
         handleError();
 
-    } catch (err) {
-        logger.error(
+    }catch(err){
+        logger.err(
             `startup:: Error while booting the application: ${JSON.stringify(
                 err,
                 undefined,

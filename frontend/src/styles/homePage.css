@@ -1,4 +1,3 @@
-
 .homeContainer{
     /* make it responsive */
     display: flex;
@@ -11,9 +10,14 @@
 }
 .homeTaskbar{
     flex: 1;
+
 }
 .homeFeed{
-    flex: 3;
+    flex: 2.5;
+    border: rgb(47, 51, 54) solid 1px;
+    min-height: 100vh;
+    height: fit-content;
+
 }
 .homeWidgets{
     flex: 2;

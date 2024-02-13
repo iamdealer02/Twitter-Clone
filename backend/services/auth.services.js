@@ -32,20 +32,23 @@ const register = async (req, res) => {
 
                 // insert user into the database with hashed password
                 await client.query(`INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`, [username, email, hashedPassword]);
-                // put the username in the profile MongoDB
+                // put the username in the profile MongoDB and get the mongo id
+
+
                 const newProfile = new ProfileModel({
                     username,
                     profile_picture: null,
                     cover_picture: null,
     
                 });
+                req.session.profileId = newProfile._id;
+                req.session.save();
+            
+
                 await newProfile.save();
                 logger.info('User registered successfully');
                 // login the user after registration
-                req.session.user = {
-                    email,
-                    username
-                };
+
 
                 const token = jwt.sign({ id: username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                 logger.info(`User: ${email} logged in successfully`);
@@ -90,13 +93,12 @@ const login = async (req, res) => {
                     return res.status(statusCode.unauthorized)
                         .json({ message: 'Invalid Credentials' });
                 } else {
+                    const mongoProfile = await ProfileModel.findOne({ username: userRecord.username });
                     // generate token with 1 hour expiration
-                    req.session.user = {
-                        email: userRecord.email,
-                        username: userRecord.username
-                    };
-                    
-                console.log(req.session.user)
+                    req.session.profileId = mongoProfile._id;
+                    // save session
+                    req.session.save();
+                    console.log('req.session.profileId:', req.session.profileId);
                     const token = jwt.sign({ id: userRecord.username }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
                     res.status(statusCode.success).json({ message: token , username: userRecord.username, email: userRecord.email});
                     logger.info(`User: ${userRecord.email} logged in successfully`);
@@ -134,4 +136,3 @@ module.exports = {
     login,
     logout
 };
-

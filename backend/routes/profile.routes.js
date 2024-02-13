@@ -20,4 +20,6 @@ router.get('/bookmarks/:username', profileServices.getBookmarks)
 router.get('/viewTweets/:username', profileTweetServices.viewUserTweets)
 
 
+router.post('/poll/vote/:tweetId/:optionId', profileServices.voteInPoll);
+
 module.exports = router;

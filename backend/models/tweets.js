@@ -1,3 +1,4 @@
+const { ObjectId } = require('bson');
 const mongoose = require('mongoose');
 
 
@@ -6,10 +7,19 @@ const tweetSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    is_repost:{
+        type: Boolean,
+        default: false
+    },
+    reposted_from: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tweet'
+    },
     is_poll: {
         type: Boolean,
         default: false
     },
+
     tweet: {
         type: String
     },
@@ -27,20 +37,9 @@ const tweetSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
-    retweets: {
-        type: Array,
-        default: []
-    },
-    comments: [{
-        userId: {
-            type: String,
+    retweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Retweet' }],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 
-        },
-        comment: {
-            type: String,
-        }
-    }
-    ],
     poll: {
         question: {
             type: String,
@@ -50,8 +49,10 @@ const tweetSchema = new mongoose.Schema({
                 type: String,
             },
             voters: [{
-                type: String, // Assuming voter IDs are strings
-                default: []
+                // object id with reference to the user model
+                type: ObjectId,
+                ref: 'user_details',
+                
             }]
         }]
     },
