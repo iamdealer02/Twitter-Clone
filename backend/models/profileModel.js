@@ -18,10 +18,7 @@ const profileSchema = new mongoose.Schema({
   cover_picture: {
     type: Buffer,
   },
-
-
-
-  
+ 
 });
 
 
