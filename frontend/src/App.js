@@ -8,6 +8,9 @@ import HomePage from './views/HomePage';
 import ProfilePage from './views/ProfilePage';
 import MessagePage from './views/MessagePage';
 import EditProfilePage from './views/EditProfilePage';
+import FollowersPage from './views/FollowersPage';
+import FollowingPage from './views/FollowingPage';
+import SettingsPage from './views/SettingsPage';
 
 
 function App() {
@@ -38,6 +41,19 @@ function App() {
 
           <Route element={<PrivateRoute />}>
            <Route path={`/profile/edit/:username`} element={<EditProfilePage />} />
+          </Route>
+
+          <Route element={<PrivateRoute />}>
+           <Route path={`/profile/:username/followers`} element={<FollowersPage />} />
+          </Route>
+
+          <Route element={<PrivateRoute />}>
+           <Route path={`/profile/:username/following`} element={<FollowingPage />} />
+          </Route>
+
+
+          <Route element={<PrivateRoute/>}>
+            <Route path="/settings/:username" element={<SettingsPage/>}/>
           </Route>
         </Routes>
   );

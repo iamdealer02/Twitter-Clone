@@ -12,7 +12,7 @@ export default function UserProfile({userProfileObj}) {
 
 
 <div className="profile-picture">
-<img src={`data:image/png;base64,${profilePicture}`} alt="pfp" /></div>    
+<img src={profilePicture} alt="pfp" /></div>    
 
      
     

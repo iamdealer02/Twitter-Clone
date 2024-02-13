@@ -54,8 +54,23 @@
     color: rgb(239, 243, 244);
     font-weight: 700;
 
-
 }
+
+
+.follow-btn button {
+
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.following-btn button {
+
+  background-color: #30313390;
+  color: #ffffff;
+}
+
+
+
 .edit-profile button{
     margin-top: 20%;
     border-radius: 9999px;

@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react'
 import '../styles/SearchBar.css'
 import instance from '../constants/axios';
 import { requests } from '../constants/requests';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function SearchBar() {
     const [searchText, setSearchText] = useState('');
     const [searchList, setSearchList] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
+    const navigate = useNavigate();
     useEffect(() => {
         // sending a backend search request
         const search = async () => {
@@ -41,6 +43,8 @@ export default function SearchBar() {
 
     }, [searchText])
 
+
+
   return (
     <div className='searchArea'>
         <div>
@@ -50,7 +54,9 @@ export default function SearchBar() {
         {(searchList.length > 0) && (onFocus) ? (
             <div className='searchResult'>
             {searchList.map((user, index) => (
-                <div className='userDetails' key={index}>
+                
+
+                <div className='userDetails' key={index} onClick={() => navigate(`/profile/${user.username}`)} >
                     {/* check if image exists */}
                     <div className='profilePic'>
                     {
@@ -60,7 +66,7 @@ export default function SearchBar() {
                     <img src='https://cdn-icons-png.flaticon.com/128/64/64572.png'/> 
                 }
                     </div>
-                <div className='userCredential'>
+                <div className='userCredential' >
                     { user.name ? <div className='fullname'>{user.name}</div> : null }
                     <div className='userName'> @ {user.username}</div>
                 </div>

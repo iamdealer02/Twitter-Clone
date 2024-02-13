@@ -38,6 +38,7 @@ export default function EditProfile() {
 
       console.log(response.data.message);
       console.log(editUserObj)
+      
     } catch (error) {
       console.error("Error updating profile:", error);
     }
