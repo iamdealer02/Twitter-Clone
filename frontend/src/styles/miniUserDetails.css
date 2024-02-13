@@ -1,0 +1,36 @@
+.userDetails{
+    display: flex;
+    flex-direction: row;
+    padding-top: 2%;
+
+}
+.profilePic img{
+    background-color: white;
+    border-radius: 50%;
+    height: 40px;
+}
+
+.userCredential {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 5px;
+    
+}
+.fullname{
+    font-size: 15px;
+    font-weight: 700;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.userName{
+    font-size: 12px;
+    color: #b0b0b0;
+}
+.createdAt{
+    font-size: 12px;
+    color: #b0b0b0;
+    margin-left: 10px;
+
+}

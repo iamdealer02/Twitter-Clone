@@ -34,11 +34,6 @@
     margin-left: 40%;
 }
 
-.homeFeed{
-    border: rgb(47, 51, 54) solid 1px;
-    height: 100vh;
-}
-
 .taskBarPostBtn{
 /* big button */
     background-color: #1da1f2;
