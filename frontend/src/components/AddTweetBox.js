@@ -2,17 +2,15 @@ import React, {useState, useEffect} from 'react'
 import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
-import requests from '../constants/requests'  // api endpoints
+import {requests} from '../constants/requests'  // api endpoints
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
 
-export default function AddTweetBox() {
-    // set the entire tweet obj
-    // send an axios call to backend for posting the tweet
 
-
+export default function AddTweetBox({setTweets, userProfileObj}) {
+    const [imageURL, setImageURL] = useState('');
     const [tweetObj, setTweetObj] = useState({
         tweet: '',
         image: '',
@@ -32,17 +30,25 @@ export default function AddTweetBox() {
        
         // add is_poll to the tweetObj
         // set empty string to null in the tweetObj
+        
         const tweetData = Object.fromEntries(
             Object.entries(tweetObj)
                 .filter(([key, value]) => value !== '') // Filter out empty values
         );
+
+
         // access the token from local storage
         const token = JSON.parse(localStorage.getItem('user')).token;
         // set the token in the header
         instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // send 
         // send the request to the backend
-        instance.post(requests.addTweet,tweetData )
+
+        await instance.post(requests.addTweet,tweetData )
         .then((response) =>{
+            setTweets((prevTweets) => {
+                return [{tweet: response.data.tweet, userDetails: userProfileObj}, ...prevTweets];
+            } ,
             setTweetObj({
                 tweet: '',
                 image: '',
@@ -54,10 +60,8 @@ export default function AddTweetBox() {
                 emoji: null,
                 schedule: null,
             })
-            console.log(response);
+             );
             notify(response.data.message);
-
-    
         })
 
     }
@@ -92,6 +96,18 @@ export default function AddTweetBox() {
             console.error('Error fetching GIFs:', error);
         }
     };
+    const handleImageChange = (e) => {
+        const file = e.target.files[0]; // Get the selected image file
+        setTweetObj({...tweetObj, image: file});
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            setImageURL(reader.result); // Set the data URL to the component state
+        };
+
+        reader.readAsDataURL(file); // Start reading the image file as a data URL
+    };
+
 
     // const searchEmojis = async () => {
     //     try {
@@ -105,10 +121,6 @@ export default function AddTweetBox() {
 
     // }
 
-
-    useEffect(() => {
-        console.log(tweetObj)
-    }, [tweetObj])
 
   return (
   <>
@@ -185,9 +197,11 @@ export default function AddTweetBox() {
 
         <div className='currentSelection'>
 
-        {tweetObj.image && (
-        <img src={tweetObj.image} alt='tweetImage' />
-        )}
+    {
+        // read the image and display it
+        tweetObj.image ? <img src={imageURL} alt='tweetImage' /> : null
+        
+    }
         {tweetObj.gif && (
             <img src={tweetObj.gif}  alt='tweetGif' />
         )}
@@ -208,20 +222,9 @@ export default function AddTweetBox() {
                     className='inputImageDiv'
                     type="file"
                     // only accept image files
-                    accept="*.png, *.jpg, *.jpeg, *.gif, *.bmp, *.tif, *.tiff|image"
+                    accept="image/*"
                     name="myImage"
-                    onChange={(e) => {
-                        const file = e.target.files[0]; // Get the first selected file
-                        const reader = new FileReader(); // Create a FileReader instance
-                        reader.onloadend = () => {
-                          // Set the image data to the state
-                          setTweetObj({...tweetObj, image: reader.result, gif: '', poll: {
-                            question: '',
-                            options: ['',''] 
-                        }});
-                        };
-                        reader.readAsDataURL(file); // Read the selected file as a data URL
-                      }}
+                    onChange={handleImageChange}
                       style={{ display: 'none' }} // Hide the file input
                     />
                 </label>
