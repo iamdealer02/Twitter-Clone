@@ -23,8 +23,8 @@ const profileSchema = new mongoose.Schema({
   },
 
   bookmarks:[ {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:'Tweet' 
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Tweet' 
   
   }],
 
@@ -38,7 +38,12 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user_details'
   
-  }]
+  }],
+
+  is_monetized: {
+    type: Boolean,
+    default: false
+},
 
 
   

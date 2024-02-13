@@ -35,6 +35,9 @@ const register = async (req, res) => {
                 // put the username in the profile MongoDB
                 const newProfile = new ProfileModel({
                     username,
+                    profile_picture: null,
+                    cover_picture: null,
+    
                 });
                 await newProfile.save();
                 logger.info('User registered successfully');

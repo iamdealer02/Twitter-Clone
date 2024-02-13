@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 // Function to convert media into buffer
 const mediaToBuffer = async (mediaData) => {
-    return new Buffer.from(mediaData, 'base64');
+    return Buffer.from(mediaData, 'base64');
 };
 
 

@@ -4,7 +4,8 @@ const statusCodes = require("../constants/statusCode");
 const logger = require("../middleware/winston");
 const profileModel = require("../models/profileModel");
 const tweets = require("../models/tweets")
-const logger = require('../middleware/winston');
+const jwt = require('jsonwebtoken');
+
 
 const fetchFromSql = async (username) => {
     const client = await pool.connect();
@@ -15,6 +16,7 @@ const fetchFromSql = async (username) => {
         client.release();
     }
 };
+
 
 
 const getUserProfile = async (req, res) => {
@@ -43,7 +45,6 @@ try {
         };
         user_details.push(combinedDetails);
        
-
         
     } else if (sqlFetch.length > 0) {
         user_details.push({
@@ -56,6 +57,8 @@ try {
     } else {
         return res.status(statusCodes.success).json({ user_details: [] });
     }
+
+    console.log(user_details);
 
     res.status(statusCodes.success).json({ user_details });
 } catch (error) {
@@ -72,20 +75,22 @@ const newMongoModel = async (req, res) => {
     const client = await pool.connect();
 
 
-    const profilemedia = profile_picture ? Buffer.from(profile_picture, 'base64') : null;
-    const covermedia = cover_picture ? Buffer.from(cover_picture, 'base64') : null;
+    // const profilemedia = profile_picture ? Buffer.from(profile_picture, 'base64') : null;
+    // const covermedia = cover_picture ? Buffer.from(cover_picture, 'base64') : null;
 
     try{
 
-        console.log(covermedia)
-        console.log(profilemedia)
+        // console.log(covermedia)
+        // console.log(profilemedia)
 
 
        const newUser = new profileModel({            
             username,
             name: name || null,  
-            profile_picture:  { data: profilemedia, contentType: 'image/png' },
-            cover_picture: { data: covermedia, contentType: 'image/png' },
+            // profile_picture:  { data: profilemedia, contentType: 'image/png' },
+            // cover_picture: { data: covermedia, contentType: 'image/png' },
+            profile_picture:  profile_picture || null,
+            cover_picture: cover_picture || null,
             followers: followers || null,
             following: following || null
          });
@@ -114,8 +119,18 @@ const newMongoModel = async (req, res) => {
 
 
 const editUserProfile = async (req, res) => {
-    const { username } = req.params;
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.decode(token);
+    
+    const username = decodedToken.id;
+    if (!decodedToken) {
+        return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
+    }
+
     const userDetails = req.body.user_details;
+
+
 
     if (!userDetails || userDetails.length === 0) {
         return res.status(400).json({ error: 'Invalid user details provided' });
@@ -125,17 +140,17 @@ const editUserProfile = async (req, res) => {
     
     const client = await pool.connect();
 
-    try{
-        
-        const mongoUser = await profileModel.findOne({ username })
 
-        if (! mongoUser){
+    try{        
+        let mongoUser = await profileModel.findOne({ username });
+
+        if (!mongoUser) {
             await newMongoModel(req, res);
-
-        } else{
+        } else {
             mongoUser.name = name || mongoUser.name || null;
             mongoUser.profile_picture = profile_picture || mongoUser.profile_picture || null;
             mongoUser.cover_picture = cover_picture || mongoUser.cover_picture || null;
+            
 
             await mongoUser.save();
 
@@ -215,10 +230,12 @@ const getBookmarks = async (req, res) => {
     }
 
 };
+
+
 const followUser = async(req, res) => {
     // get token from the header 
     const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.decode(token);
+    const decodedToken = jwt.decode(token); 
     
     const currentUser = decodedToken.id;
     if (!decodedToken) {
@@ -315,8 +332,64 @@ const followUser = async(req, res) => {
         }
 
     }
-    
 
+
+    const checkMonetization = async ( req, res) => {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token); 
+        
+        const username = decodedToken.id;
+        if (!decodedToken) {
+            return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
+        }
+
+        try{
+            const user = await profileModel.findOne({ username });
+            if(!user){
+                return res.status(statusCodes.notFound)
+                .json({ error: " user not found"})
+            }
+            const isMonitized = user.is_monetized;
+            return res.status(statusCodes.success)
+            .json({ isMonitized})
+        }
+        catch (error) {
+            console.error('Error checking monetization:', error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    };
+
+
+    const postMonetization = async (req, res) => {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token); 
+        
+        const username = decodedToken.id;
+        if (!decodedToken) {
+            return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
+        }
+
+        try{
+            const user = await profileModel.findOne({ username });
+            if(!user){
+                return res.status(statusCodes.notFound)
+                .json({ error: " user not found"})
+            }
+
+            user.is_monetized = !user.is_monetized;
+            user = await user.save();
+            return res.status(statusCodes.success)
+            .json({ message: 'monetization state updated', isMonitized: user.is_monetized})
+
+    }catch(error){
+        console.error('Error toggling monetization status:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+
+
+    }
+}
+
+    
 
 
 
@@ -333,6 +406,11 @@ module.exports = {
 ,
     followUser,
     getFollowers,
-    getFollowings
+    getFollowings,
+
+
+
+    checkMonetization,
+    postMonetization
 
 };

@@ -9,3 +9,4 @@ const {startApp} = require("./boot/setup");
         console.error(`Error in index.js => startApp() : ${JSON.stringify(err, undefined, 2)}`);
     }
 })();
+
