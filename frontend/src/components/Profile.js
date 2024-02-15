@@ -29,91 +29,94 @@ export default function Profile() {
 
   const notify = (message) => toast.error(message);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
+  const fetchData = async () => {
+    try {
 
-        // // access token from local storage
-        const token = JSON.parse(localStorage.getItem('user')).token;
-        // access username from local storage
-       if ( username === JSON.parse(localStorage.getItem('user')).username     )  {
-        setUserValid(true)
-       }
-        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // // access token from local storage
+      const token = JSON.parse(localStorage.getItem('user')).token;
+      // access username from local storage
+     if ( username === JSON.parse(localStorage.getItem('user')).username     )  {
+      setUserValid(true)
+     }
+      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-        // send request to backend to retrieve data and store it as response
-    
-        const response = await instance.get(`/profile/${username}`);
-       
-        // extract user_detaisl from the response    
-        const userArray = response.data.user_details;
-        if (userArray && userArray.length > 0) {
-          //assigning the user details of the user
-          const userData = userArray[0];
-          console.log(userData)
-
-          // const imgData = userData.cover_picture.data;
-          // console.log("data:  ", imgData)
-          // console.log('cover pic data: ', userData.cover_picture.data)
-
-         
-          const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
-
-          // const coverPicBuffer = Buffer.from(userData.cover_picture.data);
-
-          // const base64 = btoa(coverPicBuffer)
-          // console.log('bin data', base64);
-          // const base64Cover = `data:${userData.cover_picture.contentType};base64,${coverPicBuffer.toString('base64')}`;
-          
-          
-          //update the components state with extracted data from backend      
-          setUserProfileObj({
-            _id: userData?._id,           
-            name: userData?.name,
-            username: userData?.username,
-            profile_picture: userData?.profile_picture,
-            cover_picture: userData?.cover_picture,
-            bio: userData?.bio,
-            joined_date : joinedDate,
-            location : userData?.location,
-            followers: userData?.followers ,
-            following: userData?.following 
-
-          });
-
-          const current_user = JSON.parse(localStorage.getItem('user')).username;
-          // console.log(current_user)
-          const logged_in_user = await instance.get(`/profile/${current_user}`); 
-          const loggedInUserArray = logged_in_user.data.user_details;
-         
-
-          if (loggedInUserArray && loggedInUserArray.length > 0) {
-            //assigning the user details of the user
-            const loggedInUserData = loggedInUserArray[0];
-            const loggedInUserId = loggedInUserData._id
-   
+      // send request to backend to retrieve data and store it as response
   
+      const response = await instance.get(`/profile/${username}`);
+     
+      // extract user_detaisl from the response    
+      const userArray = response.data.user_details;
+      if (userArray && userArray.length > 0) {
+        //assigning the user details of the user
+        const userData = userArray[0];
+        console.log(userData)
 
+        // const imgData = userData.cover_picture.data;
+        // console.log("data:  ", imgData)
+        // console.log('cover pic data: ', userData.cover_picture.data)
 
-          if ( userData.followers.includes(loggedInUserId)){
-            setUserFollowed(true)
-          }
-        }
+       
+        const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
 
+        // const coverPicBuffer = Buffer.from(userData.cover_picture.data);
 
+        // const base64 = btoa(coverPicBuffer)
+        // console.log('bin data', base64);
+        // const base64Cover = `data:${userData.cover_picture.contentType};base64,${coverPicBuffer.toString('base64')}`;
         
-        } else {
-          
-          notify('usr details not found');
-        }
-      } catch (error) {
-        notify('error fetching details');
-        console.error('error :', error);
-      }
-    };
+        
+        //update the components state with extracted data from backend      
+        setUserProfileObj({
+          _id: userData?._id,           
+          name: userData?.name,
+          username: userData?.username,
+          profile_picture: userData?.profile_picture,
+          cover_picture: userData?.cover_picture,
+          bio: userData?.bio,
+          joined_date : joinedDate,
+          location : userData?.location,
+          followers: userData?.followers ,
+          following: userData?.following 
 
+        });
+
+        const current_user = JSON.parse(localStorage.getItem('user')).username;
+        // console.log(current_user)
+        const logged_in_user = await instance.get(`/profile/${current_user}`); 
+        const loggedInUserArray = logged_in_user.data.user_details;
+       
+
+        if (loggedInUserArray && loggedInUserArray.length > 0) {
+          //assigning the user details of the user
+          const loggedInUserData = loggedInUserArray[0];
+          const loggedInUserId = loggedInUserData._id
+ 
+
+
+
+        if ( userData.followers.includes(loggedInUserId)){
+          setUserFollowed(true)
+        }
+      }
+
+
+      
+      } else {
+        
+        notify('usr details not found');
+      }
+    } catch (error) {
+      notify('error fetching details');
+      console.error('error :', error);
+    }
+  };
+  useEffect(() => {
     fetchData(); 
-  }, []); 
+  }, []);
+  
+  useEffect(() => {
+    fetchData();
+  }, [username]);
 
 
   const handleFollow = async () => {

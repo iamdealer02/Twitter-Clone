@@ -6,12 +6,13 @@ import useAppStateContext from '../hooks/useAppStateContext'
 import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import  useSocket  from '../hooks/useSocket'
 
 
 export default function LoginForm() {
     const {dispatch} = useAppStateContext();
     const navigate = useNavigate();
+    const {dispatch: socketDispatch} = useSocket();
     
     const notify = (message) => toast.error(message); 
   
@@ -44,6 +45,11 @@ export default function LoginForm() {
                         username: response.data.username
                     },
                 });
+                socketDispatch({
+                    type: 'Login',
+                    payload: {
+                        username: response.data.username
+                    }})
                 navigate('/home')
             }) 
             .catch((error) => {

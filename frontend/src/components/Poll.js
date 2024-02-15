@@ -4,7 +4,7 @@ import instance from '../constants/axios'
 
 
 
-export default function Poll({tweet, tweet_id, setTweets, userProfileObj}) {
+export default function Poll({tweet, tweet_id, setTweets}) {
     // tweet here is individual tweet object (without UserDetails)
     const {question, options} = tweet.poll;
     const calculatePercent = (option) => {
@@ -37,7 +37,6 @@ export default function Poll({tweet, tweet_id, setTweets, userProfileObj}) {
             const response = await instance.post(`${requests.addVote}${tweet_id}/${optionId}`);
             const updatedPoll = response.data.poll;
 
-            console.log('updated poll:', updatedPoll);
             
             // Update options array of the tweet's poll object with the new data
             setTweets(prevTweets => {

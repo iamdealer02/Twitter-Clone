@@ -3,8 +3,7 @@ import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
 import {requests} from '../constants/requests'  // api endpoints
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
@@ -23,7 +22,7 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
         schedule: null,
     })
 
-    const notify = (message) => toast.error(message); 
+
 
     const handleTweetSubmit = async (e) => {
         e.preventDefault();
@@ -61,7 +60,7 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
                 schedule: null,
             })
              );
-            notify(response.data.message);
+            
         })
 
     }
@@ -124,13 +123,6 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
 
   return (
   <>
-        <ToastContainer 
-    position='top-center'
-    hideProgressBar={true}
-    newestOnTop={false}
-    closeOnClick
-    theme='dark'
-    />
     <div className='addTweetBox'>
        <div className='addTweetForm'>
               <img className='tweetProfilePic' src='https://cdn-icons-png.flaticon.com/128/5460/5460794.png' alt='profile pic'/>

@@ -13,7 +13,7 @@ const TweetList = ({tweets, setTweets, userProfileObj}) => {
             
             <div key={tweet.tweet._id}  className='tweet-card'>
             
-              <MiniUserDetail  user={tweet.userDetails} tweet={tweet.tweet} createdAt={tweet.tweet.createdAt || tweet.tweet.updatedAt} setTweets={setTweets} userProfileObj={userProfileObj} />
+              <MiniUserDetail  user={tweet.userDetails} tweet={tweet.tweet} createdAt={tweet.tweet.createdAt || tweet.tweet.updatedAt} setTweets={setTweets} />
               <InteractionButtons    tweet={tweet} userProfileObj = {userProfileObj} setTweets={setTweets} />  
               
             </div>
