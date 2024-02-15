@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const profileModel = require('../models/profileModel');
 const commentModel = require('../models/comment');
 const retweetModel = require('../models/retweet');
+const LikeModel = require('../models/like');
 
 // objectId
 const { ObjectId } = require('mongoose');
@@ -186,7 +187,6 @@ const getTweet = async (req, res) => {
         }
         try {
             // save his id in session later
-
             const user = req.session.profileId;
             // const user = '65c258e81dceafe61ff282b0'
           
@@ -314,12 +314,78 @@ const getTweet = async (req, res) => {
             return res.status(statusCode.queryError).json({ message: 'Error while adding the repost' });
         }
     }
-    
 
+    const likeTweet = async (req, res) => {
+        const { tweetId } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
+        
+        if (!decodedToken) {
+            return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
+        }
+        try {
+            const user = req.session.profileId; // Assuming the user's profileId is stored in the session
+
+            if (!user) {
+                return res.status(statusCode.notFound).json({ message: 'User not found' });
+            }
+            
+            // Check if the user has already liked the tweet
+            const like = await LikeModel.findOne({ userId: user, tweetId: tweetId });
+            
+            if (like) {
+                // If user has liked, remove the like
+                await LikeModel.deleteOne({ _id: like._id });
+                const tweet = await TweetModel.findOne({ _id: tweetId });
+                
+                if (!tweet) {
+                    return res.status(statusCode.notFound).json({ message: 'Tweet not found' });
+                }
+                
+                tweet.likes.pull(like._id);
+                await tweet.save();
+                
+                const response = {
+                    like_count: tweet.likes.length,
+                    liked: false
+                };
+                
+                return res.status(statusCode.success).json({ message: 'Like removed successfully', tweet: response });
+            }
+            
+            // User is liking the tweet
+            const newLike = new LikeModel({ userId: user, tweetId: tweetId });
+            await newLike.save();
+            
+            // Add the like to the tweet
+            const tweet = await TweetModel.findOne({ _id: tweetId });
+            
+            if (!tweet) {
+                return res.status(statusCode.notFound).json({ message: 'Tweet not found' });
+            }
+            
+            tweet.likes.push(newLike._id);
+            await tweet.save();
+            
+            const response = {
+                like_count: tweet.likes.length,
+                liked: true
+            };
+            
+            return res.status(statusCode.success).json({ message: 'Like added successfully', tweet: response });
+        } catch (error) {
+            console.error('Error while liking/unliking the tweet', error);
+            return res.status(statusCode.queryError).json({ message: 'Error while liking/unliking the tweet' });
+        }
+    };
+    
+    
 module.exports = {
     createTweet,
     getTweet,
     addComment,
     retweet,
-    repost
+    repost,
+    likeTweet
+
 };
