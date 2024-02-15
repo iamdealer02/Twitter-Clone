@@ -1,4 +1,4 @@
-const { error } = require("winston");
+
 const pool = require("../boot/database/db_connect");
 const statusCodes = require("../constants/statusCode");
 const logger = require("../middleware/winston");
@@ -344,32 +344,72 @@ const followUser = async(req, res) => {
         }
 
     }
-
-
-
-
-
+    const recommendedAccounts = async (req, res) => {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
+        const username = decodedToken.id;
+       
+        if (!decodedToken) {
+            return res.status(401).json({ message: 'Session Expired' });
+        }
+        try {
+            // Find the user document with the given username and populate the 'followers' field
+            const user = await profileModel.findOne({ username }).populate('followers');
     
-
-
-
-
-
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+    
+            // Extract the followers from the populated field
+            const followers = user.followers.map(follower => ({
+                _id: follower._id,
+                username: follower.username,
+                name: follower.name,
+                profile_picture: follower.profile_picture
+            }));
+    
+            // Find uncommon followers 
+            const uncommonFollowing = followers.filter(follower => !user.following.includes(follower._id));
+    
+            // Ensure there are at least 5 recommendations
+            if (uncommonFollowing.length < 5) {
+                const recentUsers = await profileModel.find({ username: { $ne: username } }).limit(5 - uncommonFollowing.length);
+    
+                // Filter recentUsers to exclude users already followed by the current user or already in uncommonFollowing
+                const filteredRecentUsers = recentUsers.filter(recentUser => {
+                    return !user.following.includes(recentUser._id) && !uncommonFollowing.some(f => f._id.toString() === recentUser._id.toString());
+                });
+    
+                // Add filteredRecentUsers to uncommonFollowing
+                filteredRecentUsers.forEach(recentUser => {
+                    uncommonFollowing.push({
+                        _id: recentUser._id,
+                        username: recentUser.username,
+                        name: recentUser.name,
+                        profile_picture: recentUser.profile_picture
+                    });
+                });
+            }
+    
+            // You can then send the uncommon following as a response
+            res.status(200).json({ uncommonFollowing });
+        } catch (error) {
+            console.error('Error fetching recommended accounts:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    };
+    
 
 
 module.exports = {
     getUserProfile,
     editUserProfile,
     postBookmarks,
-    getBookmarks
-    
-,
+    getBookmarks,
     followUser,
     getFollowers,
     getFollowings,
-
-
-
     voteInPoll,
+    recommendedAccounts
 
 };

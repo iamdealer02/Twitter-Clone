@@ -16,9 +16,9 @@ router.get('/:username/following', profileServices.getFollowings);
 router.post('/edit/:username', upload.fields([{ name: 'profile_picture', maxCount: 1}, { name: 'cover_picture', maxCount: 1}]), profileServices.editUserProfile);
 
 router.post('/addBookmark/:bookmarks', profileServices.postBookmarks);
-router.get('/bookmarks/:username', profileServices.getBookmarks)
-router.get('/viewTweets/:username', profileTweetServices.viewUserTweets)
-
+router.get('/bookmarks/:username', profileServices.getBookmarks);
+router.get('/viewTweets/:username', profileTweetServices.viewUserTweets);
+router.get('/recommended/users', profileServices.recommendedAccounts);
 
 router.post('/poll/vote/:tweetId/:optionId', profileServices.voteInPoll);
 
