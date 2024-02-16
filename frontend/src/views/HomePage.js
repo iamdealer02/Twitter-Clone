@@ -8,6 +8,7 @@ import { requests } from '../constants/requests'  // api endpoints
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from '../components/SearchBar'
+import Recommendation from '../components/Recommendation'
 
 function HomePage() {
     const notify = (message) => toast.error(message); 
@@ -102,6 +103,7 @@ function HomePage() {
             </div>
             <div className='homeWidgets'>
                 <SearchBar/>
+                <Recommendation/>
             </div>
         </div>
     </div>

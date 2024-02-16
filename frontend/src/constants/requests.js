@@ -11,5 +11,6 @@ export const requests = {
     addVote: "/profile/poll/vote/",
     retweet: "/tweet/retweet",
     repost : "/tweet/repost",
-    addComment: "/tweet/addComment"
+    addComment: "/tweet/addComment",
+    getRecommendations: "/profile/recommended/users",
 }
