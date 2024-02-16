@@ -88,11 +88,13 @@ const getTweet = async (req, res) => {
             // check if that particular tweet has been retweeted by current user
             const retweeted = await retweetModel.findOne({userId : currentUser, originalTweetId: tweet._id})
             // if is_reposted, get user data
+            const liked = await LikeModel.findOne({userId: currentUser, tweetId: tweet._id})
            
             var originalPoster = null;
             if (tweet.is_repost) {
                 originalPoster = await profileModel.findOne({ username: tweet.reposted_from.username });
             }   
+
 
             return { tweet:{
                 _id: tweet._id,
@@ -106,9 +108,11 @@ const getTweet = async (req, res) => {
                 media: { data: tweet.media?.data || null, contentType: tweet.media?.contentType },
                 retweet_count: tweet.retweets?.length,
                 retweeted: retweeted ? true : false,
+                liked: liked? true : false,
                 like : tweet.likes?.length,
                 comment_count : tweet.comments?.length,
                 is_repost : tweet.is_repost || false,
+
                 createdAt: tweet.createdAt,
                 reposted_from : {
                     tweet: {
@@ -325,11 +329,11 @@ const getTweet = async (req, res) => {
         }
         try {
             const user = req.session.profileId; // Assuming the user's profileId is stored in the session
+            //const user = '65ce34243e76a50aa291dac7'
 
             if (!user) {
                 return res.status(statusCode.notFound).json({ message: 'User not found' });
             }
-            
             // Check if the user has already liked the tweet
             const like = await LikeModel.findOne({ userId: user, tweetId: tweetId });
             
@@ -341,18 +345,15 @@ const getTweet = async (req, res) => {
                 if (!tweet) {
                     return res.status(statusCode.notFound).json({ message: 'Tweet not found' });
                 }
-                
                 tweet.likes.pull(like._id);
                 await tweet.save();
                 
                 const response = {
-                    like_count: tweet.likes.length,
+                    like: tweet.likes.length,
                     liked: false
                 };
-                
                 return res.status(statusCode.success).json({ message: 'Like removed successfully', tweet: response });
             }
-            
             // User is liking the tweet
             const newLike = new LikeModel({ userId: user, tweetId: tweetId });
             await newLike.save();
@@ -363,15 +364,13 @@ const getTweet = async (req, res) => {
             if (!tweet) {
                 return res.status(statusCode.notFound).json({ message: 'Tweet not found' });
             }
-            
             tweet.likes.push(newLike._id);
             await tweet.save();
             
             const response = {
-                like_count: tweet.likes.length,
+                like: tweet.likes.length,
                 liked: true
             };
-            
             return res.status(statusCode.success).json({ message: 'Like added successfully', tweet: response });
         } catch (error) {
             console.error('Error while liking/unliking the tweet', error);
