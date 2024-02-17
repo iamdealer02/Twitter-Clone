@@ -91,7 +91,8 @@ const getTweet = async (req, res) => {
             const retweeted = await retweetModel.findOne({userId : currentUser, originalTweetId: tweet._id})
             //check if they are bookmarked
             const bookmarked = user.bookmarks.includes(tweet._id);
-
+            // check if the user has liked the tweet
+            const liked = await LikeModel.findOne({ userId: currentUser, tweetId: tweet._id });
 
 
             var originalPoster = null;
@@ -112,6 +113,7 @@ const getTweet = async (req, res) => {
                 retweet_count: tweet.retweets?.length,
                 retweeted: retweeted ? true : false,
                 like : tweet.likes?.length,
+                liked: liked ? true : false,
                 comment_count : tweet.comments?.length,
                 is_repost : tweet.is_repost || false,
                 bookmarked: bookmarked ? true : false,
