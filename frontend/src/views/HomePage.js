@@ -28,6 +28,8 @@ function HomePage() {
         fetchTweets(); 
   
       }, []); 
+
+      
           // set the entire tweet obj
     // send an axios call to backend for posting the tweet
     // username, profile_pic, name for user obj

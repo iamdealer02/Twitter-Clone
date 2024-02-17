@@ -5,27 +5,20 @@ import instance from '../constants/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import UserProfile from './UserProfile';
 import { Buffer } from 'buffer';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import ProfilePost from './ProfilePost';
+import ProfileReplies from './ProfileReplies';
 
 export default function Profile() {
   const navigate = useNavigate();
   const {username} = useParams();
 
-  const [userProfileObj, setUserProfileObj] = useState({
-    _id: null,
-    name: '',
-    bio: '',
-    profile_picture: [],
-    cover_picture: [],
-    username: '',
-    joined_date: '',
-    location : '',
-    followers:  [],
-    following: []
-  });
+  const [userProfileObj, setUserProfileObj] = useState({});
 
   const [userValid, setUserValid] = useState(false)
   const [userFollowed, setUserFollowed] = useState(false)  
+
+  const [activeTab, setActiveTab] = useState('posts');
 
   const notify = (message) => toast.error(message);
 
@@ -50,22 +43,10 @@ export default function Profile() {
         if (userArray && userArray.length > 0) {
           //assigning the user details of the user
           const userData = userArray[0];
-          console.log(userData)
-
-          // const imgData = userData.cover_picture.data;
-          // console.log("data:  ", imgData)
-          // console.log('cover pic data: ', userData.cover_picture.data)
-
+          console.log('res',userData)
          
           const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
 
-          // const coverPicBuffer = Buffer.from(userData.cover_picture.data);
-
-          // const base64 = btoa(coverPicBuffer)
-          // console.log('bin data', base64);
-          // const base64Cover = `data:${userData.cover_picture.contentType};base64,${coverPicBuffer.toString('base64')}`;
-          
-          
           //update the components state with extracted data from backend      
           setUserProfileObj({
             _id: userData?._id,           
@@ -108,7 +89,7 @@ export default function Profile() {
         }
       } catch (error) {
         notify('error fetching details');
-        console.error('error :', error);
+        console.error('error :', error); 
       }
     };
 
@@ -141,8 +122,9 @@ export default function Profile() {
   };
 
 
-
-
+  const handleClick = (tab) => {
+    setActiveTab(tab);
+  };
 
 
 
@@ -184,14 +166,48 @@ export default function Profile() {
       
       <ToastContainer />
     </div>
-    <div className="views-box">
-    <div className="views-container"><button className="posts">Posts</button></div>
-    <div className="views-container"><button className="replies">Replies</button></div>
-    <div className="views-container"><button className="likes">Likes</button></div>
-    <div className="views-container"><button className="media">Media</button></div>
+   
+    <div>
+      <div className="tab-buttons">
+        <button
+          className={activeTab === 'posts' ? 'active' : ''}
+          onClick={() => handleClick('posts')}
+        >
+          Posts
+        </button>
+        <button
+          className={activeTab === 'replies' ? 'active' : ''}
+          onClick={() => handleClick('replies')}
+        >
+          Replies
+        </button>
+        <button
+          className={activeTab === 'likes' ? 'active' : ''}
+          onClick={() => handleClick('likes')}
+        >
+          Likes
+        </button>
+        <button
+          className={activeTab === 'media' ? 'active' : ''}
+          onClick={() => handleClick('media')}
+        >
+          Media
+        </button>
+      </div>
+
+      {activeTab === 'posts' && <ProfilePost userProfileObj={userProfileObj} />}
+      {activeTab === 'replies' && <ProfileReplies userProfileObj={userProfileObj} />}
+      {/* {activeTab === 'likes' && <ProfileLikes />}
+      {activeTab === 'media' && <ProfileMedia />} */}
+    </div>
+    <div className="views-container">
+      
+
+      </div>
+
+  
 
     </div>
 
-    </div>
   );
 }

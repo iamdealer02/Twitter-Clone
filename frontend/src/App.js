@@ -13,6 +13,7 @@ import FollowingPage from './views/FollowingPage';
 import SettingsPage from './views/SettingsPage';
 
 
+
 function App() {
 
 
@@ -31,6 +32,13 @@ function App() {
           <Route element={<PrivateRoute />}>
            <Route path={`/profile/:username`} element={<ProfilePage />} />
           </Route>
+
+
+          {/* <Route element={<PrivateRoute />}>
+           <Route path={`/profile/replies/:username`} element={<ProfileRepliesPage />} />
+          </Route> */}
+
+
           <Route element={<PrivateRoute/>}>
             {/* pass socket */}
             <Route path="/messages" element={<MessagePage/>}/>
@@ -38,6 +46,8 @@ function App() {
           <Route element={<PrivateRoute/>}>
             <Route path="/messages/:username" element={<MessagePage/>}/>
           </Route>
+
+          
 
           <Route element={<PrivateRoute />}>
            <Route path={`/profile/edit/:username`} element={<EditProfilePage />} />

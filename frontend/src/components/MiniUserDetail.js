@@ -3,9 +3,10 @@ import '../styles/miniUserDetails.css'
 import Tweet from './Tweet'
 import Poll from './Poll'
 
-export default function MiniUserDetail({ user,tweet, createdAt, userProfileObj,setTweets }) { // Destructure 'user' from props
-    // single tweet object
+export default function MiniUserDetail({ user,tweet, createdAt,setTweets }) { // Destructure 'user' from props
+    console.log('user mini', user)
     const { userProfilePic, name, username } = user;
+    
     // function to display the date / hours ago
     const timeAgo = (date) => {
         const now = new Date();
@@ -41,7 +42,7 @@ export default function MiniUserDetail({ user,tweet, createdAt, userProfileObj,s
         </div>
         
         {
-                tweet?.is_poll ? (<Poll  tweet={tweet} tweet_id={tweet._id} setTweets={setTweets} userProfileObj={userProfileObj} />) : 
+                tweet?.is_poll ? (<Poll  tweet={tweet} tweet_id={tweet._id} setTweets={setTweets}  />) : 
                 <Tweet tweet={tweet} setTweets={setTweets} />
             
               }    

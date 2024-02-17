@@ -12,7 +12,9 @@ export default function UserProfile({userProfileObj}) {
 
 
 <div className="profile-picture">
-<img src={profilePicture} alt="pfp" /></div>    
+<img src={profilePicture } alt="pfp" /> :   
+{/* <img src='https://cdn-icons-png.flaticon.com/128/64/64572.png' alt='default profile' />  */}
+</div> 
 
      
     
