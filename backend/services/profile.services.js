@@ -5,6 +5,7 @@ const logger = require("../middleware/winston");
 const profileModel = require("../models/profileModel");
 const TweetModel = require("../models/tweets");
 const jwt = require("jsonwebtoken");
+const saveImages = require('../aws/s3Bucket');
 
 const fetchFromSql = async (username) => {
     const client = await pool.connect();
@@ -68,58 +69,76 @@ try {
 
 
 const editUserProfile = async (req, res) => {
-
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.decode(token);
-    
-    const username = decodedToken.id;
-    if (!decodedToken) {
-        return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
-    }
-
-    const userDetails = req.body.user_details;
-
-
-
-    if (!userDetails || userDetails.length === 0) {
-        return res.status(400).json({ error: 'Invalid user details provided' });
-    }
-    
-    const { name, bio, location, profile_picture, cover_picture } = userDetails[0];
-    
-    const client = await pool.connect();
-
-
-    try{        
-        let mongoUser = await profileModel.findOne({ username });
-
-        if (!mongoUser) {
-            await newMongoModel(req, res);
-        } else {
-            mongoUser.name = name || mongoUser.name || null;
-            mongoUser.profile_picture = profile_picture || mongoUser.profile_picture || null;
-            mongoUser.cover_picture = cover_picture || mongoUser.cover_picture || null;
-            
-
-            await mongoUser.save();
-
-
-            const sqlQuery = 'UPDATE users SET bio = $1, location = $2 WHERE username = $3';
-            const sqlValues = [bio, location, username]
-            const sqlExecution = await client.query ( sqlQuery, sqlValues)
-            console.log(sqlExecution)  }
-            res.status(200).json({ message: 'User profile updated in MongoDB' });
+    try {
+     
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
         
+        if (!decodedToken) {
+            return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
+        }
+
+        const username = decodedToken.id;
+        const { name, bio, location } = req.body;
+
+        
+
+        console.log(name, bio, location)
+        console.log(req.files)
+        let profile_picture_url = null;
+        let cover_picture_url = null;
+
+       
+        if (req.files && req.files.length >= 2) {
+            // Access profile picture and cover picture files from req.files array
+            const [profile_picture, cover_picture] = req.files;
+            console.log(profile_picture, cover_picture)
+            // Process profile picture
+            if (profile_picture) {
+                image = profile_picture.buffer;
+                console.log(image)
+                profile_picture_url = await saveImages( profile_picture, image) ;
+            }
+
+            // Process cover picture
+            if (cover_picture) {
+                image = cover_picture.buffer;
+                console.log(image)
+                cover_picture_url = await saveImages(cover_picture, image) ;
+            }
+        }
+
+        const client = await pool.connect();
+
+        try {        
+            let mongoUser = await profileModel.findOne({ username });
+
+            if (!mongoUser) {
+                await newMongoModel(req, res);
+            } else {
+                mongoUser.name = name || mongoUser.name || null;
+                mongoUser.profile_picture = profile_picture_url || mongoUser.profile_picture || null;
+                mongoUser.cover_picture = cover_picture_url || mongoUser.cover_picture || null;
+
+                await mongoUser.save();
+
+                const sqlQuery = 'UPDATE users SET bio = $1, location = $2 WHERE username = $3';
+                const sqlValues = [bio, location, username];
+                await client.query(sqlQuery, sqlValues);
+            }
+
+            res.status(200).json({ message: 'User profile updated successfully' });
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } finally {
+            client.release();
+        }
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
-
-    }finally{
-        client.release();
     }
-
 };
-
 
 const voteInPoll = async (req, res) => {
     const {tweetId, optionId} = req.params;

@@ -30,7 +30,8 @@ const tweetSchema = new mongoose.Schema({
         type: String
     },
     schedule: {
-        type: Date
+        type: Date,
+
     },
 
     likes: {
@@ -58,8 +59,7 @@ const tweetSchema = new mongoose.Schema({
     },
     
     media: {
-        data: Buffer, // Use Buffer to store binary data of the media
-        contentType: String // Store content type for appropriate rendering (e.g., image/jpeg, image/png)
+        type: String,
     }
 }   , { timestamps: true }
 );

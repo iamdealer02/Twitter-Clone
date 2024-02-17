@@ -19,7 +19,7 @@ const logger = require('../middleware/winston');
 const morgan = require('morgan');
 const notFound = require('../middleware/notFound');
 const healthCheck = require('../middleware/healthcheck');
-const uploadMiddleware  = require('../middleware/multer');
+
 
 
 
@@ -29,6 +29,7 @@ const io = new Server(server, {  // Create Socket.IO server using the HTTP serve
     cors: {
         origin: 'http://localhost:3000',
         methods: ['GET', 'POST'],
+        
     },
 });
 
