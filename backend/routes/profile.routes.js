@@ -5,11 +5,17 @@ const profileTweetServices = require('../services/profile.tweet.services');
 
 
 
+
 const upload = require('../middleware/multer');
 const router = express.Router();
 
-
 router.get('/:username', profileServices.getUserProfile);
+router.get('/posts/:username', profileTweetServices.viewPosts);
+router.get('/replies/:username', profileTweetServices.viewReplies);
+router.get('/likes/:username', profileTweetServices.viewLikes);
+
+
+
 router.post('/follow/:followedUserId', profileServices.followUser);
 router.get('/:username/followers', profileServices.getFollowers);
 router.get('/:username/following', profileServices.getFollowings);
@@ -17,7 +23,7 @@ router.post('/edit/:username', upload.fields([{ name: 'profile_picture', maxCoun
 
 router.post('/addBookmark/:bookmarks', profileServices.postBookmarks);
 router.get('/bookmarks/:username', profileServices.getBookmarks)
-router.get('/viewTweets/:username', profileTweetServices.viewUserTweets)
+
 
 
 router.post('/poll/vote/:tweetId/:optionId', profileServices.voteInPoll);

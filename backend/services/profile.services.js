@@ -5,6 +5,8 @@ const logger = require("../middleware/winston");
 const profileModel = require("../models/profileModel");
 const TweetModel = require("../models/tweets");
 const jwt = require("jsonwebtoken");
+const profileTweetServices = require('../services/profile.tweet.services');
+
 
 const fetchFromSql = async (username) => {
     const client = await pool.connect();
@@ -15,6 +17,9 @@ const fetchFromSql = async (username) => {
         client.release();
     }
 };
+
+
+
 
 
 
@@ -343,7 +348,14 @@ const followUser = async(req, res) => {
             return res.status(statusCodes.badRequest).json({ message: 'Internal server error' });
         }
 
-    }
+    };
+
+
+
+
+
+
+
 
 
 
@@ -371,5 +383,6 @@ module.exports = {
 
 
     voteInPoll,
+
 
 };
