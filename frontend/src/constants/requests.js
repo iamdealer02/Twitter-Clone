@@ -12,5 +12,6 @@ export const requests = {
     retweet: "/tweet/retweet",
     repost : "/tweet/repost",
     addComment: "/tweet/addComment",
-    likeTweet: "/tweet/likeTweet"
+    likeTweet: "/tweet/likeTweet",
+    postBookmarks: "/profile/addBookmark"
 }

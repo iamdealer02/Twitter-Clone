@@ -74,12 +74,6 @@ const getTweet = async (req, res) => {
         const tweets = await TweetModel.find().sort({ createdAt: -1 }).populate('reposted_from').exec();
 
 
-        // get every image from multer storage
-        tweets.forEach(tweet => {
-            if (tweet.media.data) {
-                tweet.media.data = tweet.media.data.toString('base64');
-            }
-        });
 
         // Fetch user details for each tweet and populate tweetsData array
         const tweetsData = await Promise.all(tweets.map(async (tweet) => {
@@ -87,14 +81,15 @@ const getTweet = async (req, res) => {
             const user = await profileModel.findOne({ username: tweet.username });
             // check if that particular tweet has been retweeted by current user
             const retweeted = await retweetModel.findOne({userId : currentUser, originalTweetId: tweet._id})
-            // if is_reposted, get user data
-            const liked = await LikeModel.findOne({userId: currentUser, tweetId: tweet._id})
-           
+            //check if they are bookmarked
+            const bookmarked = user.bookmarks.includes(tweet._id);
+
+
+
             var originalPoster = null;
             if (tweet.is_repost) {
                 originalPoster = await profileModel.findOne({ username: tweet.reposted_from.username });
             }   
-
 
             return { tweet:{
                 _id: tweet._id,
@@ -105,14 +100,13 @@ const getTweet = async (req, res) => {
                 emoji : tweet.emoji || null,
                 schedule : tweet.schedule || null,
                 poll: { question: tweet.poll.question, options: tweet.poll.options },
-                media: { data: tweet.media?.data || null, contentType: tweet.media?.contentType },
+                media : tweet.media,
                 retweet_count: tweet.retweets?.length,
                 retweeted: retweeted ? true : false,
-                liked: liked? true : false,
                 like : tweet.likes?.length,
                 comment_count : tweet.comments?.length,
                 is_repost : tweet.is_repost || false,
-
+                bookmarked: bookmarked ? true : false,
                 createdAt: tweet.createdAt,
                 reposted_from : {
                     tweet: {
