@@ -3,8 +3,7 @@ import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
 import {requests} from '../constants/requests'  // api endpoints
-import UserProfile from './UserProfile';
-
+import useSocket from '../hooks/useSocket'
 
 
 
@@ -12,6 +11,8 @@ import UserProfile from './UserProfile';
 export default function AddTweetBox({setTweets, userProfileObj}) {
     const [imageURL, setImageURL] = useState('');
     const [videoUrl, setVideoUrl] = useState('');
+    const {state} = useSocket();
+    const socket = state.socket;
     const [tweetObj, setTweetObj] = useState({
         tweet: '',
         image: '',
@@ -41,6 +42,7 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
         formData.append('schedule', tweetObj.schedule);
         // Append image file
         formData.append('image', tweetObj.image);
+        // sending everyone connected to the socket the tweet and the userDetails
 
 
         try {
@@ -59,6 +61,9 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
             setTweets((prevTweets) => {
                 return [{ tweet: response.data.tweet, userDetails: userProfileObj }, ...prevTweets];
             });
+            const type = 'tweet';
+            const data = { tweet: response.data.tweet, userDetails: userProfileObj };
+            socket.emit('live_feed',  {type,data} );
             // Reset tweetObj state
             setTweetObj({
                 tweet: '',

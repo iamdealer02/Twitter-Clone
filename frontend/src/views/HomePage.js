@@ -9,10 +9,14 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from '../components/SearchBar'
 import Recommendation from '../components/Recommendation'
+import useSocket from '../hooks/useSocket' 
 
 function HomePage() {
     const notify = (message) => toast.error(message); 
     const [tweets, setTweets] = useState([]); 
+    const {state} = useSocket();
+    const socket = state.socket;
+
     useEffect(() => { 
         const fetchTweets = async () => {
           try {
@@ -29,6 +33,89 @@ function HomePage() {
         fetchTweets(); 
   
       }, []); 
+
+
+      useEffect(() => {
+        // Function to handle receiving tweet
+        const handleReceiveTweet = (data) => {
+          setTweets((prevTweets) => [data, ...prevTweets]);
+        };
+      
+        // Function to handle receiving like
+        const handleReceiveLike = (data) => {
+          setTweets((prevTweets) => {
+            return prevTweets.map((tweetItem) => {
+              if (tweetItem.tweet._id === data.tweetId) {
+                return {
+                  ...tweetItem,
+                  tweet: {
+                    ...tweetItem.tweet,
+                    like: data.like
+                  }
+                };
+              }
+              return tweetItem;
+            });
+          });
+        };
+      
+        // Function to handle receiving reply
+        const handleReceiveReply = (data) => {
+          setTweets((prevTweets) => {
+            return prevTweets.map((tweetItem) => {
+              if (tweetItem.tweet._id === data.tweetId) {
+                return {
+                  ...tweetItem,
+                  tweet: {
+                    ...tweetItem.tweet,
+                    comment_count: data.comment_count
+                  }
+                };
+              }
+              return tweetItem;
+            });
+          });
+        };
+      
+        const handleReceiveRetweet = (data) => {
+          setTweets((prevTweets) => {
+            return prevTweets.map((tweetItem) => {
+              if (tweetItem.tweet._id === data.tweetId) {
+                return {
+                  ...tweetItem,
+                  tweet: {
+                    ...tweetItem.tweet,
+                    retweet_count: data.retweet_count
+                  }
+                };
+              }
+              return tweetItem;
+            });
+          });
+        }
+
+
+
+
+        // Attach event listeners
+        socket.on('receive_tweet', handleReceiveTweet);
+        socket.on('receive_like', handleReceiveLike);
+        socket.on('receive_reply', handleReceiveReply);
+        socket.on('receive_retweet', handleReceiveRetweet);
+      
+        // Cleanup function
+        return () => {
+          // Remove event listeners
+          socket.off('receive_tweet', handleReceiveTweet);
+          socket.off('receive_like', handleReceiveLike);
+          socket.off('receive_reply', handleReceiveReply);
+          socket.off('receive_retweet', handleReceiveRetweet);
+        };
+      }, []);
+      
+
+
+
           // set the entire tweet obj
     // send an axios call to backend for posting the tweet
     // username, profile_pic, name for user obj

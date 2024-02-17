@@ -1,11 +1,16 @@
-import React from 'react'; 
+import React, { useEffect } from 'react'; 
 import '../styles/tweetList.css';
 import MiniUserDetail from './MiniUserDetail';
 import InteractionButtons from './interactionButtons';
+// use sockets
+import useSocket from '../hooks/useSocket' 
 
 
 const TweetList = ({tweets, setTweets, userProfileObj}) => {
-  console.log(tweets)
+  const {state} = useSocket();
+  const socket = state.socket;
+  // keep listening for the sockets
+  
   return (
     <div className="news-feed">
         <div className="tweet-list"> 

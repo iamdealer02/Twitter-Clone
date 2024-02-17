@@ -5,6 +5,7 @@ import CommentPopUp from './CommentPopUp';
 import instance from '../constants/axios';
 import { requests } from '../constants/requests';
 //import axios from 'axios';
+import useSocket from '../hooks/useSocket';
 
 const InteractionButtons = ({ tweet, userProfileObj, setTweets }) => {
   const [retweetOption, setRetweetOption] = useState(false);
@@ -12,7 +13,8 @@ const InteractionButtons = ({ tweet, userProfileObj, setTweets }) => {
   const [commentPopUp, setCommentPopUp] = useState(false);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(tweet.tweet.bookmarked);
-
+  const { state } = useSocket();
+  const socket = state.socket;
 
   const handlelikeTweet = () => {
     // Send a request to like/unlike the tweet
@@ -36,8 +38,13 @@ const InteractionButtons = ({ tweet, userProfileObj, setTweets }) => {
               }
             }
             return tweetItem;
-          });
+          }); 
         });
+        // emit the like event to the server
+        const type='like';
+        const data = {
+          tweetId: tweet.tweet._id, like: response.data.tweet.like}
+        socket.emit('live_feed', {type, data});
 
         // Toggle the liked state
         setLiked(!liked);

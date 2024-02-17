@@ -2,8 +2,11 @@ import React, {useState} from 'react'
 import MiniUserDetail from './MiniUserDetail'
 import { requests} from '../constants/requests'
 import instance from '../constants/axios'
+import useSocket from '../hooks/useSocket'
 
 export default function CommentPopUp({commentPopUp, setCommentPopUp, tweet, setTweets, userProfileObj}) {
+    const {state} = useSocket();
+    const socket = state.socket;
   // tweet object with tweet and userDetails
   const [comment, setComment] = useState('');
   const addComment = async () => {
@@ -14,6 +17,7 @@ export default function CommentPopUp({commentPopUp, setCommentPopUp, tweet, setT
         const tweetId = tweet.tweet._id;
         const response = await instance.post(requests.addComment + '/' + tweetId, {comment});
         console.log('response:', response);
+
         setTweets(prevTweets => {
             return prevTweets.map(tweetItem => {
                 if (tweetItem.tweet._id === tweetId) {
@@ -26,8 +30,15 @@ export default function CommentPopUp({commentPopUp, setCommentPopUp, tweet, setT
                     };
                 }
                 return tweetItem;
+
             });
+        // send a message to socket
+
         });
+        const type='reply';
+        const data = {
+            tweetId: tweet.tweet._id, comment_count: response.data.comment_length}
+        socket.emit('live_feed', {type, data});
     } catch(error) {
         console.log(error);
     }

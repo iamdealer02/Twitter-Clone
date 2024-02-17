@@ -2,9 +2,12 @@ import React,{useState} from 'react'
 import MiniUserDetail from './MiniUserDetail'
 import { requests} from '../constants/requests'
 import instance from '../constants/axios'
+import useSocket from '../hooks/useSocket'
 
 export default function QuotePopUp({quotePopUp, setQuotePopUp, tweet, setTweets, userProfileObj}) {
   const [comment, setComment] = useState('');
+  const {state} = useSocket();
+  const socket = state.socket;
   // tweet object with tweet and userDetails
  
   const repost = async () => {
@@ -22,6 +25,10 @@ export default function QuotePopUp({quotePopUp, setQuotePopUp, tweet, setTweets,
         return [{tweet: response.data.tweetsData, userDetails: userProfileObj}, ...prevTweets];
     } 
     );
+      const type='tweet';
+      const data = {
+          tweet: response.data.tweetsData, userDetails: userProfileObj}
+      socket.emit('live_feed', {type, data});
       
     } catch(error) {
       console.log('error:', error);
