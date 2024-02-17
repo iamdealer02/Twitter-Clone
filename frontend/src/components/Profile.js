@@ -4,7 +4,6 @@ import '../styles/profilePage.css';
 import instance from '../constants/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import UserProfile from './UserProfile';
-import { Buffer } from 'buffer';
 import { useNavigate } from 'react-router-dom'
 import FollowBtn from './FollowBtn';
 
@@ -117,9 +116,7 @@ export default function Profile() {
       console.error('error :', error);
     }
   };
-  useEffect(() => {
-    fetchData(); 
-  }, []);
+
   
   useEffect(() => {
     fetchData();

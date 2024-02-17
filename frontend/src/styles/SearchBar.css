@@ -46,15 +46,16 @@
 .userDetails{
     display: flex;
     flex-direction: row;
-    align-items: center;
     padding: 2%;
-    width: fit-content;
-    justify-content: space-between;
+    width: 100%;
+    margin: 2%;
 }
 .profilePic img{
     background-color: white;
     border-radius: 50%;
     height: 50px;
+    width: 50px;
+    object-fit: cover;
 }
 
 .userCredentials {

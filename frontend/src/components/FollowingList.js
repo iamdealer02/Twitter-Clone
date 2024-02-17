@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import instance from '../constants/axios';
 import { toast } from 'react-toastify';
 import { useLocation} from 'react-router-dom';
+import UserProfile from './UserProfile';
 
 export default function FollowingList() {
     const { username} = useParams();
@@ -24,7 +25,7 @@ export default function FollowingList() {
             }
         };
         fetchFollowing();
-    }, []);
+    }, [username]);
 
     const notify = (message) => {
         toast.error(message);
@@ -45,17 +46,10 @@ export default function FollowingList() {
         {followingList.map((following, id) => (
             <a href={`/profile/${following.username}`} key={id} className="user-link">
             <div className="user-details">
-                <div className="profile-picture">
-
-                        <img src={following.profile_picture} alt='profile' /> 
-                </div>
-                <div className="user-credentials">
-                { following.name ? <div className='fullname'>{following.name}</div> : null }
-                    <div className='username'> @ {following.username}</div>
-
-
-                </div>
+                <div className="following-tag">
+                <UserProfile userProfileObj={following} searchbox={true} messagebox={false} />
       
+                </div>
                 </div>
                 </a>
                 ))}

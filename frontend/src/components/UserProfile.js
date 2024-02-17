@@ -10,10 +10,9 @@ export default function UserProfile({userProfileObj, searchbox=false, messagebox
   <div className= {`${searchbox ? 'profilePic': 'profile-picture'}`}>
   <img
         src={
-            userProfileObj?.profile_picture ||
-            Object.keys(userProfileObj.profile_picture || {}).length === 0
-                ? 'https://cdn-icons-png.flaticon.com/128/64/64572.png'
-                : userProfileObj.profile_picture
+            userProfileObj?.profile_picture ?userProfileObj.profile_picture
+                : 'https://cdn-icons-png.flaticon.com/128/64/64572.png'
+                
         }
         alt="pfp"
     />

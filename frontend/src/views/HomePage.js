@@ -57,17 +57,20 @@ function HomePage() {
               //assigning the user details of the user
               const userData = userArray[0];
           
-              //update the components state with extracted data from backend      
+              //update the components state with extracted data from backend 
+
               setUserProfileObj({
                 id: userData._id,
                 name: userData.name,
                 username: userData.username,
-                profile_pic: userData.profile_pic
+                profile_picture: userData.profile_picture
               });
+
             } else {
               
               notify('usr details not found');
             }
+          
           } catch (error) {
             notify('error fetching details');
             console.error('error :', error);
