@@ -8,5 +8,6 @@ router.get('/getTweet', tweetServices.getTweet);
 router.post('/addComment/:tweetId', tweetServices.addComment);
 router.post('/retweet/:ogTweetId', tweetServices.retweet);
 router.post('/repost/:ogTweetId', tweetServices.repost);
+router.post('/likeTweet/:tweetId', tweetServices.likeTweet);
 
 module.exports = router;
