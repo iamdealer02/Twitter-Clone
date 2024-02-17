@@ -17,12 +17,15 @@
   .tweet-content {
     font-size: 15px;
     color: #ebf0f5;
-    margin-left: 50px;
-    margin-right: 20px;
-    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+  
   }
   
-
+.tweet-user{
+  min-width: 80%;
+  max-width: fit-content;
+}
 
 
 
@@ -34,6 +37,7 @@
   
 
   .tweet-interaction-btn {
+    margin-top: 0;
     display: flex;
     flex-direction: row;
     background: transparent;

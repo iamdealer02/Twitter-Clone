@@ -1,63 +1,71 @@
 const TweetModel = require('../models/tweets');
 const logger = require('../middleware/winston');
 const statusCode = require('../constants/statusCode');
-const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const profileModel = require('../models/profileModel');
 const commentModel = require('../models/comment');
 const retweetModel = require('../models/retweet');
 const LikeModel = require('../models/like');
+const saveImages = require('../aws/s3Bucket');
 
-// objectId
-const { ObjectId } = require('mongoose');
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+
 
 const createTweet = async (req, res) => {
-    
-    const { tweet, gif,image, poll, emoji, schedule } = req.body;
+    const { tweet, gif, poll, emoji, schedule } = req.body;
+    const image = req.file ? req.file.buffer : null;
 
-    // get the token from the request header
-    const token = req.headers.authorization.split(' ')[1];
-    // decode the token to get the user id
-    const decodedToken = jwt.decode(token);
-    const username = decodedToken.id;
-    console.log(username)
-    // if the token is invalid, return an error
-    if (!decodedToken) {
-        return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
-    }
-    
-
-
-    let media = null;
     try {
-        const pollOptions = poll.options.map(option => ({ option }));
 
-        // Create a new instance of the Tweet model
-        console.log(media);
-        const newTweet = new TweetModel ({
-            username,
-            is_poll: poll.question ? true : false,
-            tweet,
-            gif,
-            emoji,
-            schedule,
-            poll: { question: poll.question, options: pollOptions },
-            media: { data: media, contentType: 'image/png' }
-      
-        });
 
-        await newTweet.save();
-        logger.info('Tweet created successfully');
-        return res.status(statusCode.success).json({ message: 'Tweet created successfully', tweet: newTweet});
+        // Upload image to S3 if it exists
+        let imageUrl = null;
+            
+        // If an image is included in the request
+        if (image) {
+            // Set up parameters for uploading the image to S3
+             imageUrl = await saveImages(req.file, image);
+            // Send the PutObjectCommand to upload the image to S3
+
+        }
+
+        
+
+        // Get the user ID from the decoded token
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
+        const username = decodedToken.id;
+
+        // Ensure the token is valid
+        if (!decodedToken) {
+            return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
+        }
+
+        // MAKE poll options by changing json
+         pollData = JSON.parse(poll);
+            const pollOptions = pollData?.options?.map(option => ({ option }));
+           console.log(pollOptions);
+            // Create a new instance 
+            const newTweet = new TweetModel ({
+                username,
+                is_poll: pollData.question ? true : false,
+                tweet,
+                gif,
+                emoji,
+                poll: { question: pollData.question, options: pollOptions },
+                media: imageUrl ? imageUrl : null,
+          
+            });
     
-    } catch (error) {
-        logger.error('Error while creating the tweet', error);
-        return res.status(statusCode.queryError).json({ message: 'Error while creating the tweet' });
-    }
-};
+            await newTweet.save();
+            logger.info('Tweet created successfully');
+            return res.status(statusCode.success).json({ message: 'Tweet created successfully', tweet: newTweet});
+        
+        } catch (error) {
+            logger.error('Error while creating the tweet', error);
+            return res.status(statusCode.queryError).json({ message: 'Error while creating the tweet' });
+        }
+    };
 
 const getTweet = async (req, res) => {
     try {
@@ -78,12 +86,13 @@ const getTweet = async (req, res) => {
         // Fetch user details for each tweet and populate tweetsData array
         const tweetsData = await Promise.all(tweets.map(async (tweet) => {
            
-            const user = await profileModel.findOne({ username: tweet.username });
+            const user = await profileModel.findOne({ username: tweet.username }   );
             // check if that particular tweet has been retweeted by current user
             const retweeted = await retweetModel.findOne({userId : currentUser, originalTweetId: tweet._id})
             //check if they are bookmarked
             const bookmarked = user.bookmarks.includes(tweet._id);
-
+            // check if the user has liked the tweet
+            const liked = await LikeModel.findOne({ userId: currentUser, tweetId: tweet._id });
 
 
             var originalPoster = null;
@@ -104,6 +113,7 @@ const getTweet = async (req, res) => {
                 retweet_count: tweet.retweets?.length,
                 retweeted: retweeted ? true : false,
                 like : tweet.likes?.length,
+                liked: liked ? true : false,
                 comment_count : tweet.comments?.length,
                 is_repost : tweet.is_repost || false,
                 bookmarked: bookmarked ? true : false,
@@ -117,14 +127,14 @@ const getTweet = async (req, res) => {
                         emoji: tweet.reposted_from?.emoji || null,
                         schedule: tweet.reposted_from?.schedule || null,
                         poll: { question: tweet.reposted_from?.poll?.question, options: tweet.reposted_from?.poll?.options },
-                        media: { data: tweet.reposted_from?.media?.data || null, contentType: tweet.reposted_from?.media?.contentType },
+                        media: tweet.reposted_from?.media || null,
                         createdAt: tweet.reposted_from?.createdAt
                         
                     },
-                    userDetails: {username: originalPoster?.username , name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
+                    userDetails: {username: originalPoster?.username , name: originalPoster?.name || null, profile_picture: originalPoster?.profile_picture || null }
                 }
 
-            }, userDetails: {username: tweet.username, name: user?.name || null, userProfilePic: user?.profile_pic || null } };
+            }, userDetails: {username: tweet.username, name: user?.name || null, profile_picture: user?.profile_picture || null } };
         }));
       
         // Send the response with tweetsData]=
@@ -255,7 +265,7 @@ const getTweet = async (req, res) => {
                 emoji,
                 schedule,
                 poll,
-                media: { data: image, contentType: 'image/png' },
+                media: image ? image : null,
             });
             
             // Save the new tweet
@@ -281,7 +291,7 @@ const getTweet = async (req, res) => {
                 emoji : tweetmodel.emoji || null,
                 schedule : tweetmodel.schedule || null,
                 poll: { question: tweetmodel.poll.question, options: tweetmodel.poll.options },
-                media: { data: tweetmodel.media?.data || null, contentType: tweetmodel.media?.contentType },
+                media: tweetmodel.media || null, 
                 retweet_count: tweetmodel.retweets?.length,
                 retweeted: retweeted ? true : false,
                 like : tweetmodel.likes?.length,
@@ -298,11 +308,11 @@ const getTweet = async (req, res) => {
                         emoji: tweetmodel.reposted_from?.emoji || null,
                         schedule: tweetmodel.reposted_from?.schedule || null,
                         poll: { question: tweetmodel.reposted_from?.poll?.question, options: tweetmodel.reposted_from?.poll?.options },
-                        media: { data: tweetmodel.reposted_from?.media?.data || null, contentType: tweetmodel.reposted_from?.media?.contentType },
+                        media: tweetmodel.reposted_from?.media || null,
                         createdAt: tweetmodel.reposted_from?.createdAt
                         
                     },
-                    userDetails: {username: originalPoster?.username , name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
+                    userDetails: {username: originalPoster?.username , name: originalPoster?.name || null, profile_picture: originalPoster?.profile_picture || null }
                 }
 
             };

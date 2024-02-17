@@ -5,8 +5,8 @@ import Poll from './Poll'
 
 export default function MiniUserDetail({ user,tweet, createdAt,setTweets }) { // Destructure 'user' from props
     // single tweet object
-    
-    const { userProfilePic, name, username } = user;
+    const { profile_picture, name, username } = user;
+ 
     // function to display the date / hours ago
     const timeAgo = (date) => {
         const now = new Date();
@@ -29,23 +29,26 @@ export default function MiniUserDetail({ user,tweet, createdAt,setTweets }) { //
         <div className='tweet-Body'>
         <div className='userDetails'>
             <div className='profilePic'>
-                {userProfilePic   ?  
-                    <img src={userProfilePic} alt='profile' /> : 
+                {profile_picture   ?  
+                    <img src={profile_picture} alt='profile' /> : 
                     <img src='https://cdn-icons-png.flaticon.com/128/64/64572.png' alt='default profile' /> 
                 }
             </div>
+            <div className='tweet-user'>
             <div className='userCredential'>
                 {user.name ? <div className='fullname'>{name}</div> : <div className='fullname'>{username} </div>}
                 <div className='userName'> @ {username}</div>
                 <div className='createdAt'>.{date}</div>
-            </div> 
-        </div>
-        
-        {
+            </div>
+            {
                 tweet?.is_poll ? (<Poll  tweet={tweet} tweet_id={tweet._id} setTweets={setTweets}  />) : 
                 <Tweet tweet={tweet} setTweets={setTweets} />
             
               }    
+              </div> 
+        </div>
+        
+
         </div>
     );
 }

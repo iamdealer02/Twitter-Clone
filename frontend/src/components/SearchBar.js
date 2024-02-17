@@ -87,7 +87,7 @@ export default function SearchBar({messaging=false}) {
   ></input>
  
 </div>
-        <div ref={resultBoxRef}>
+        <div className='' ref={resultBoxRef}>
         {(searchList.length > 0) && (onFocus) ? (
             <div className='searchResult'>
         {searchList.map((user, index) => (

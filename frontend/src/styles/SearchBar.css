@@ -24,7 +24,15 @@
     outline: none;
 }
 
-.searchResult {
+
+
+
+.searchResult{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2%;
     border: rgb(47, 51, 54) solid 1px;
     background-color: rgb(0, 0, 0);
     box-shadow: 0 0 10px 0 rgba(223, 223, 223, 0.1);
@@ -32,29 +40,22 @@
     border-radius: 20px;
     padding:0.5%;
     margin-top: 1rem;
-}
-
-.searchResult{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-    padding: 2%;
+    position: relative;
 }
 
 .userDetails{
     display: flex;
     flex-direction: row;
-    align-items: center;
     padding: 2%;
-    width: fit-content;
-    justify-content: space-between;
+    width: 100%;
+    margin: 2%;
 }
 .profilePic img{
     background-color: white;
     border-radius: 50%;
     height: 50px;
+    width: 50px;
+    object-fit: cover;
 }
 
 .userCredentials {
@@ -67,4 +68,14 @@
 .userName{
     font-size: 15px;
     color: #b0b0b0;
+}
+.mini-username{
+    font-size: 12px;
+    color: #878686;
+    margin-top: 5px;
+}
+.mini-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 5px;
 }
