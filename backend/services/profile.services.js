@@ -183,26 +183,27 @@ const voteInPoll = async (req, res) => {
     }
 };
 
-
-
 const postBookmarks = async (req, res) => {
     const {bookmarks} = req.params
-    // const token = req.headers.authorization.split(' ')[1];
-    // const decodedToken = jwt.decode(token);
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.decode(token);
     
-    // const username = decodedToken.id;
-    // if (!decodedToken) {
-    //     return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
-    // } 
+    const username = decodedToken.id;
+    if (!decodedToken) {
+        return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
+    } 
 
-    const username = "u2";
-    
+
     try{
+        // un bookmarking
         const userFetch = await profileModel.findOneAndUpdate(
             { username: username, bookmarks: bookmarks  },
             { $pull: { bookmarks: bookmarks } },
             { returnOriginal: false }
         );
+        const response = {
+            "bookmarked": false, 
+        }
         
 
         if (!userFetch) {
@@ -211,9 +212,14 @@ const postBookmarks = async (req, res) => {
                 { $addToSet: { bookmarks: bookmarks } },
                 { returnOriginal: false }
             );
-            return res.status(statusCodes.success).json({ message: 'bookmarked Successfully' });
+            const response = {
+                "bookmarked": true,
+            }
+// send the response
+
+            return res.status(statusCodes.success).json({ message: 'Bookmarked!', response :response });
         }   
-        return res.status(statusCodes.success).json({ message: 'removed bookmark Successfully' });
+        return res.status(statusCodes.success).json({ message: 'Unbookmarked!', response: response });
 
     } catch (error) {
         console.error('error saving bookmarks:', error);
@@ -222,7 +228,6 @@ const postBookmarks = async (req, res) => {
 
 
 };
-
 
 
 
