@@ -31,19 +31,35 @@ export default function EditProfile() {
       const token = JSON.parse(localStorage.getItem('user')).token;
       const username = JSON.parse(localStorage.getItem('user')).username;
       instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      const response = await instance.post(`/profile/edit/${username}`, { user_details: [editUserObj] });
-
-      navigate(`/profile/${username}`)
-
-      console.log(response.data.message);
-      console.log(editUserObj)
-      
+  
+      // Create a new FormData object
+      const formData = new FormData();
+      formData.append('name', editUserObj.name);
+      formData.append('bio', editUserObj.bio);
+      formData.append('location', editUserObj.location);
+      if (editUserObj.profile_picture) {
+        formData.append('images', editUserObj.profile_picture);
+      }
+      if (editUserObj.cover_picture) {
+        formData.append('images', editUserObj.cover_picture);
+      }
+  
+      // Make the request with the serialized form data
+      await instance.post(`/profile/edit/${username}`, formData, {
+        headers: {
+          Accept: 'application/json',
+          // Ensure the content type is multipart/form-data for file uploads
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      navigate(`/profile/${username}`);
     } catch (error) {
       console.error("Error updating profile:", error);
+      notify('Error updating profile');
     }
   };
-
+  
 
   const closeForm = async (e) => {
     const username = JSON.parse(localStorage.getItem('user')).username;
@@ -53,19 +69,13 @@ export default function EditProfile() {
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
+
   
     if (type === 'file') {
       const file = e.target.files[0];
-  
       if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setEditUserObj({ ...editUserObj, [name]: reader.result });
-        };
-        reader.readAsDataURL(file);
-      } else {
-        // Handle case when the user clears the file input
-        setEditUserObj({ ...editUserObj, [name]: null });
+        setEditUserObj({ ...editUserObj, [name]: file });
+
       }
     } else {
       // Handle other input changes
@@ -115,7 +125,13 @@ export default function EditProfile() {
 
   return (
     <div>     
-
+      <ToastContainer
+        position="top-center"
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        theme='dark'
+      />
       
       <form className="edit-profile-form" onSubmit={handleEditSubmit}>
         <div className="profile-header">

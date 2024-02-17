@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import '../styles/SearchBar.css'
 import instance from '../constants/axios';
 import { requests } from '../constants/requests';
 import { useNavigate } from 'react-router-dom';
+import UserProfile from './UserProfile';
 
-
-export default function SearchBar() {
+export default function SearchBar({messaging=false}) {
     const [searchText, setSearchText] = useState('');
     const [searchList, setSearchList] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
@@ -24,14 +24,12 @@ export default function SearchBar() {
                     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     const response = await instance.get(`${requests.searchUser}/?keyword=${searchText}`);
                     var result = response.data.result;
-                    if (result.length === 0){
+                    if (result.length === 0 && searchText.length > 0){
                         setSearchList([]);
                         
                     }
                     setSearchList(result);
-                    console.log(searchList)
-                    
-                    
+                 
                 }
 
                 
@@ -43,37 +41,61 @@ export default function SearchBar() {
 
     }, [searchText])
 
+    const resultBoxRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (resultBoxRef.current && !resultBoxRef.current.contains(event.target)) {
+            setOnFocus(false); // Trigger onBlur only when clicking outside the result box
+          }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, []);
+      const [receiver, setReceiver] = useState('');
+
+      // get username from local storage user object
+      const sender = JSON.parse(localStorage.getItem('user')).username;
+      //  for messaging:
+      const createChatRoom= (username) => {
+        setReceiver(username);
+      // create a new chat room
+      if (sender !== '' && receiver !== '') {
+          // send token in the header
+                  window.location.href = `/messages/${receiver}`;
+
+            
+          }
+  }
+  
+  
 
 
   return (
     <div className='searchArea'>
-        <div>
-        <textarea type='text' onFocus={()=> {setOnFocus(!onFocus)}} onBlur={() => {setOnFocus(!onFocus)}} onChange={(e) => {setSearchText(e.target.value)}} value={searchText}  placeholder='Search' />
-        </div>
-        <div>
+<div className="textarea-container">
+  <input
+    className="textarea"
+    rows={2}
+    onFocus={() => setOnFocus(true)}
+  
+    onChange={(e) => setSearchText(e.target.value)}
+    value={searchText}
+    placeholder="search users..."
+  ></input>
+ 
+</div>
+        <div className='' ref={resultBoxRef}>
         {(searchList.length > 0) && (onFocus) ? (
             <div className='searchResult'>
-            {searchList.map((user, index) => (
-                
-
-                <div className='userDetails' key={index} onClick={() => navigate(`/profile/${user.username}`)} >
-                    {/* check if image exists */}
-                    <div className='profilePic'>
-                    {
-                    user.profile_pic ? 
-                   
-                    <img src={user.profile_pic} alt='profile' /> : 
-                    <img src='https://cdn-icons-png.flaticon.com/128/64/64572.png'/> 
-                }
-                    </div>
-                <div className='userCredential' >
-                    { user.name ? <div className='fullname'>{user.name}</div> : null }
-                    <div className='userName'> @ {user.username}</div>
-                </div>
-
-                
-                </div>
-            ))}
+        {searchList.map((user, index) => (
+            // navigate to different places if the search is from messaging or not
+        <div key={index} onClick={() => {messaging ? createChatRoom(user.username) : navigate(`/profile/${user.username}`)}}>
+            <UserProfile userProfileObj={{ username: user.username, name: user.name, profile_picture: user.profile_picture }} searchbox={true} />
+        </div>
+        ))}
             </div>
         ) : 
         (searchList.length === 0 && onFocus) ?
@@ -82,7 +104,7 @@ export default function SearchBar() {
         </div>
 
 
- 
+
 
   </div>
   )

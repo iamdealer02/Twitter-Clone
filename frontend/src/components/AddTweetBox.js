@@ -3,14 +3,15 @@ import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
 import {requests} from '../constants/requests'  // api endpoints
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import UserProfile from './UserProfile';
+
 
 
 
 
 export default function AddTweetBox({setTweets, userProfileObj}) {
     const [imageURL, setImageURL] = useState('');
+    const [videoUrl, setVideoUrl] = useState('');
     const [tweetObj, setTweetObj] = useState({
         tweet: '',
         image: '',
@@ -23,48 +24,58 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
         schedule: null,
     })
 
-    const notify = (message) => toast.error(message); 
+
 
     const handleTweetSubmit = async (e) => {
         e.preventDefault();
-       
-        // add is_poll to the tweetObj
-        // set empty string to null in the tweetObj
-        
-        const tweetData = Object.fromEntries(
-            Object.entries(tweetObj)
-                .filter(([key, value]) => value !== '') // Filter out empty values
-        );
+    
+        // Construct FormData object
+        const formData = new FormData();
+        // Append JSON data
+  
+        formData.append('tweet', tweetObj.tweet);
+        console.log(tweetObj.tweet)
+        formData.append('gif', tweetObj.gif);
+        formData.append('poll', JSON.stringify(tweetObj.poll));
+        formData.append('emoji', tweetObj.emoji);
+        formData.append('schedule', tweetObj.schedule);
+        // Append image file
+        formData.append('image', tweetObj.image);
 
 
-        // access the token from local storage
-        const token = JSON.parse(localStorage.getItem('user')).token;
-        // set the token in the header
-        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        // send 
-        // send the request to the backend
-
-        await instance.post(requests.addTweet,tweetData )
-        .then((response) =>{
+        try {
+            // Access the token from local storage
+            const token = JSON.parse(localStorage.getItem('user')).token;
+            // Set the token in the header
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            // Send the request to the backend
+            const response = await instance.post(requests.addTweet, formData, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            // Handle response
             setTweets((prevTweets) => {
-                return [{tweet: response.data.tweet, userDetails: userProfileObj}, ...prevTweets];
-            } ,
+                return [{ tweet: response.data.tweet, userDetails: userProfileObj }, ...prevTweets];
+            });
+            // Reset tweetObj state
             setTweetObj({
                 tweet: '',
                 image: '',
                 gif: '',
                 poll: {
                     question: '',
-                    options: ['',''],
+                    options: ['', ''],
                 },
                 emoji: null,
                 schedule: null,
-            })
-             );
-            notify(response.data.message);
-        })
-
-    }
+            });
+        } catch (error) {
+            console.error('Error submitting tweet:', error);
+        }
+    };
+    
          
    const [isPollValid, setIsPollValid] = useState(false);
     useEffect(() => {
@@ -96,17 +107,26 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
             console.error('Error fetching GIFs:', error);
         }
     };
-    const handleImageChange = (e) => {
-        const file = e.target.files[0]; // Get the selected image file
-        setTweetObj({...tweetObj, image: file});
+    const handleMediaChange = (e) => {
+        const file = e.target.files[0]; // Get the selected media file
+        setTweetObj({ ...tweetObj, image: file }); // Assuming tweetObj has a media property to store the selected media file
+        console.log(tweetObj.media);
+    
         const reader = new FileReader();
-
+    
         reader.onload = () => {
-            setImageURL(reader.result); // Set the data URL to the component state
+            if (file.type.startsWith('image')) {
+                // Handle image file
+                setImageURL(reader.result);
+            } else if (file.type.startsWith('video')) {
+                // Handle video file
+                setVideoUrl(reader.result);
+            }
         };
-
-        reader.readAsDataURL(file); // Start reading the image file as a data URL
+    
+        reader.readAsDataURL(file); // Start reading the media file as a data URL
     };
+    
 
 
     // const searchEmojis = async () => {
@@ -124,16 +144,9 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
 
   return (
   <>
-        <ToastContainer 
-    position='top-center'
-    hideProgressBar={true}
-    newestOnTop={false}
-    closeOnClick
-    theme='dark'
-    />
     <div className='addTweetBox'>
        <div className='addTweetForm'>
-              <img className='tweetProfilePic' src='https://cdn-icons-png.flaticon.com/128/5460/5460794.png' alt='profile pic'/>
+              <img className='tweetProfilePic' src={userProfileObj.profile_picture ? userProfileObj.profile_picture : 'https://cdn-icons-png.flaticon.com/128/5460/5460794.png'} alt='profile pic'/>
               {openPoll ? 
               (<div className='tweetPollForm'>
                 <input type='text'  placeholder='Ask a question' value={tweetObj.poll.question} onChange={(e) => {
@@ -199,9 +212,13 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
 
     {
         // read the image and display it
-        tweetObj.image ? <img src={imageURL} alt='tweetImage' /> : null
+        tweetObj.image && imageURL ? <img src={imageURL} alt='tweetImage' /> : null
         
     }
+    {
+        tweetObj.image && videoUrl ? <video src={videoUrl} alt='tweetVideo' controls /> : null
+    }
+
         {tweetObj.gif && (
             <img src={tweetObj.gif}  alt='tweetGif' />
         )}
@@ -221,11 +238,11 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
                     id="inputImage"
                     className='inputImageDiv'
                     type="file"
-                    // only accept image files
-                    accept="image/*"
+                    // accept both image and video files
+                    accept="image/*,video/*"
                     name="myImage"
-                    onChange={handleImageChange}
-                      style={{ display: 'none' }} // Hide the file input
+                    onChange={handleMediaChange}
+                  
                     />
                 </label>
                 {/* sends a request to an api  */}

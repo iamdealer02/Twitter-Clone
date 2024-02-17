@@ -1,10 +1,27 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import '../styles/taskbar.css'
 import { useNavigate } from 'react-router-dom'
+import useSocket from '../hooks/useSocket'
+
 
 export default function TaskBar() {
+    const {state} = useSocket();
+    const socket = state.socket;
+    console.log(socket);
     const username = JSON.parse(localStorage.getItem('user')).username;
     const navigate = useNavigate();
+    const [notificationCount, setNotificationCount] = useState(0);
+
+    useEffect(() => {
+        if (socket){
+            socket.on("receive_message", ({ message, sender, time }) => {
+                setNotificationCount(notificationCount + 1);
+            
+              });
+
+        } 
+      }, [socket, notificationCount]);
+
   return (
     <div>
         <div className='taskBarContainer'>
@@ -16,7 +33,7 @@ export default function TaskBar() {
                 </g>
             </svg>
             </div>
-            <div className='taskBarHome taskbarUtil'>
+            <div className='taskBarHome taskbarUtil' onClick={ () => navigate(`/home`)}>
                 <div >
                     <svg className='taskBarIcon' viewBox="0 0 24 24" fill="#ffffff">
                         <g>
@@ -24,7 +41,7 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText' onClick={ () => navigate(`/home`)}>
+                <div className='taskBarText' >
                     Home
                 </div>
             </div>
@@ -42,6 +59,7 @@ export default function TaskBar() {
             </div>
             <div className='taskBarNotifications taskbarUtil'>
             <div >
+                  
                     <svg className='taskBarIcon' viewBox="0 0 24 24" fill="#ffffff">
                         <g>
                         <path d="M19.993 9.042C19.48 5.017 16.054 2 11.996 2s-7.49 3.021-7.999 7.051L2.866 18H7.1c.463 2.282 2.481 4 4.9 4s4.437-1.718 4.9-4h4.236l-1.143-8.958zM12 20c-1.306 0-2.417-.835-2.829-2h5.658c-.412 1.165-1.523 2-2.829 2zm-6.866-4l.847-6.698C6.364 6.272 8.941 4 11.996 4s5.627 2.268 6.013 5.295L18.864 16H5.134z"></path>
@@ -54,6 +72,7 @@ export default function TaskBar() {
             </div>
             <div className='taskBarMessages taskbarUtil'onClick={ () => navigate(`/messages`)}>
             <div >
+            <div className='notificationCount'>{notificationCount}</div>
                     <svg className='taskBarIcon' viewBox="0 0 24 24" fill="#ffffff">
                         <g>
                         <path d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5v13c0 1.381-1.119 2.5-2.5 2.5h-15c-1.381 0-2.5-1.119-2.5-2.5v-13zm2.5-.5c-.276 0-.5.224-.5.5v2.764l8 3.638 8-3.636V5.5c0-.276-.224-.5-.5-.5h-15zm15.5 5.463l-8 3.636-8-3.638V18.5c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-8.037z"></path>
@@ -108,7 +127,7 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText' onClick={ () => navigate(`/profile/${username}`)}>
+                <div className='taskBarText'>
                     Profile
                 </div>
             </div>
@@ -123,7 +142,7 @@ export default function TaskBar() {
 
                 </svg>
                 </div>
-                <div className="taskBarText"onClick={ () => navigate(`/settings/${username}`)}>
+                <div className="taskBarText">
                     More
                 </div>
 

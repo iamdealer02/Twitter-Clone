@@ -12,14 +12,11 @@ const profileSchema = new mongoose.Schema({
   },
 
   profile_picture: {
-    data: Buffer, 
-    contentType: String,
+    type: String,
   },
 
   cover_picture: {
-    data: Buffer, 
-    contentType: String,
-  
+    type: String,
   },
 
   bookmarks:[ {
@@ -44,7 +41,6 @@ const profileSchema = new mongoose.Schema({
     type: Boolean,
     default: false
 },
-
 
   
 });

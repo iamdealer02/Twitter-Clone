@@ -11,6 +11,7 @@ import EditProfilePage from './views/EditProfilePage';
 import FollowersPage from './views/FollowersPage';
 import FollowingPage from './views/FollowingPage';
 import SettingsPage from './views/SettingsPage';
+import WelcomePage from './views/WelcomePage';
 
 
 
@@ -19,6 +20,9 @@ function App() {
 
   return ( 
         <Routes>
+          <Route element={<PublicRoute/>}>
+          <Route path="/" element={<WelcomePage/>}/>
+          </Route>
           <Route element={<PublicRoute/>}>
             <Route path="/register" element={<RegistrationPage/>}/>
           </Route>

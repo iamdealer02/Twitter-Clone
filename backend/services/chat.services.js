@@ -2,7 +2,7 @@ const ChatModel = require('../models/chatModel');
 const logger = require('../middleware/winston');
 const pool = require('../boot/database/db_connect');
 const statusCode = require('../constants/statusCode');
-
+const ProfileModel = require('../models/profileModel');
 const jwt = require('jsonwebtoken');
 const saveChat = async (req, res) => {
     try {
@@ -75,22 +75,34 @@ const getAllChat = async (req,res) => {
     }
     const user = decodedToken.id;
    
-  
     try{
         const chat = await ChatModel.find({ participants: user });
-        const formattedChat = chat.map(chatItem => {
+        // find all the users data involved (username, profile_pic, name)
+
+        const formattedChat = await Promise.all(chat.map(async chatItem => {
+            // {participant that is not the user}
+            console.log(chatItem.participants);
+            // participants =[user1, user2]
+            const participant = chatItem.participants.find(participant => participant !== user);
+            const participantData = await ProfileModel.findOne({ username: participant });
             return {
                 participants: chatItem.participants,
+                participantData: {
+                    _id: participantData._id,
+                    username: participantData.username,
+                    profile_picture: participantData.profile_picture,
+                    name: participantData.name
+                
+                },
                 lastMessage: chatItem.messages.length > 0 ? chatItem.messages[chatItem.messages.length - 1] : null
             };
-        });
+        }));
         res.status(statusCode.success).json({ formattedChat });
 
     }catch (error) {
         logger.error(`Error in chat.services.js => getAllChat() : ${error}`);
         res.status(statusCode.badRequest).json({message: 'Internal server error'});
     }
-
 }
 const isReceiverValid = async (req,res) => {
     const {receiver} = req.params;
@@ -106,12 +118,16 @@ const isReceiverValid = async (req,res) => {
         const result = await pool.query('SELECT uid FROM users WHERE username = $1', [receiver]);
         if (result.rows.length === 0){
 
+
             return res.status(statusCode.notFound).json({message: false});
         }
         if (result.rows[0].username === user){
             return res.status(statusCode.badRequest).json({message: false});
         }
-        res.status(statusCode.success).json({message: true});
+                    //send username, name and pfp from profile model
+        const receiver_data = await ProfileModel.findOne({ username: receiver });
+    
+        res.status(statusCode.success).json({message: true, receiver_data: {_id:receiver_data._id, username: receiver_data.username, name: receiver_data.name, profile_picture: receiver_data.profile_picture}});
     }catch (error) {
         logger.error(`Error in chat.services.js => isReceiverValid() : ${error}`);
         res.status(statusCode.badRequest).json({message: 'Internal server error'});

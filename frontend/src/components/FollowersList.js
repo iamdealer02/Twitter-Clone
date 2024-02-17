@@ -4,8 +4,13 @@ import { useParams } from 'react-router-dom';
 import instance from '../constants/axios';
 import { toast } from 'react-toastify';
 import { useLocation} from 'react-router-dom';
+import UserProfile from './UserProfile';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function FollowersList() {
+    
+    const navigate = useNavigate();
     const { username } = useParams();
     const [followersList, setFollowersList] = useState([]);
     const { pathname } = useLocation();
@@ -43,20 +48,13 @@ export default function FollowersList() {
             <div className="followers">
 
             {followersList.map((follower, id) => (
-                <a href={`/profile/${follower.username}`} key={id} className="user-link">
-            <div className="user-details" >
-                <div className="profile-picture">               
-                       
-                        <img src={follower.profile_picture} alt='profile' />                   
-
+            <div className="user-details" onClick= {()=> {navigate( `/profile/${follower.username}`)}} >
+                <div className='following-tag'>
+                <UserProfile userProfileObj={follower} searchbox={true} messagebox={false} />
+             
+                    </div>
                 </div>
-                <div className="user-credentials">
-                { follower.name ? <div className='fullname'>{follower.name}</div> : null }
-                    <div className='username'> @ {follower.username}</div>
-                    </div>
-                    </div>
-                    </a>
-
+            
 
                 ))}
 

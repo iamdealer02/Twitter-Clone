@@ -1,15 +1,19 @@
 import React, { useState, useEffect,useRef } from 'react';
-import io from "socket.io-client";
 import '../styles/personalMessage.css';
 import { requests } from '../constants/requests';
 import instance from '../constants/axios';
 import ChatList from './ChatList';
 import { useParams } from 'react-router-dom';
+import useSocket from '../hooks/useSocket'
+import UserProfile from './UserProfile';
+import { useNavigate } from 'react-router-dom';
 
 
-
-export default function PersonalMessage() {
-
+export default function PersonalMessage(participantData) {
+  const navigate = useNavigate();
+ const {state} = useSocket();
+  const socket = state.socket;
+  console.log(participantData)
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const sender = JSON.parse(localStorage.getItem('user')).username;
@@ -25,9 +29,7 @@ export default function PersonalMessage() {
       }
     }, [messageList]);
   
-  const socket = io.connect("http://localhost:3001", {
-    query: { username: sender }
-  });
+
 
 
   // getChatHistory based on the receiver
@@ -44,7 +46,7 @@ export default function PersonalMessage() {
         const messages = response.data.chat.messages;
         const formattedMessages = messages.map(message => {
           return {
-            ...(message.sender === sender ? { sent: message.content } : { received: message.content })
+            ...(message?.sender === sender ? { sent: message.content } : { received: message.content })
           };
         });
     
@@ -94,8 +96,6 @@ export default function PersonalMessage() {
   useEffect(() => {
     socket.on("receive_message", ({ message, sender, time }) => {
       setMessageList([...messageList, { 'received': message }]);
-      // change the last message in the peopleList
-
   
     });
 
@@ -106,15 +106,21 @@ export default function PersonalMessage() {
     <div className='outerDiv'>
         <div className='personalMessageSelected'>
           <div className='messageHeader'>
-            <div className='messageReceiver'>
-              username
-            </div>
-            <div className='messageHeaderRight'>
-              <div className='messageHeaderRightFollow'>Follow</div>
+           
+            <div className='messageHeaderRight' onClick={()=>{navigate(`/profile/${receiver}`)}}>
+              {/* use navigate */}
+              {/* navigate to user profile */}
+
+              <UserProfile userProfileObj={participantData.participantData} messagebox={true} searchbox={true} />
+           
             </div>
           </div>
           <div className='messageList'  ref={messageListRef}>
-            <ChatList messageList={messageList} />
+           {/* conditionally */}
+           {
+            messageList ? <ChatList messageList={messageList} /> : null
+           }
+    
           </div>
           <div className='messageBody'>
             <div className='messageInput'>

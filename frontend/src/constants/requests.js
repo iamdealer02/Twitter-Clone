@@ -6,10 +6,13 @@ export const requests = {
     getChatHistory: "/chat/get",
     getPeopleList: "/chat",
     isReceiverValid: "/chat/validate",
-    searchUser: "/search"   ,
+    searchUser: "/search",
     getTweet: "/tweet/getTweet",
     addVote: "/profile/poll/vote/",
     retweet: "/tweet/retweet",
     repost : "/tweet/repost",
-    addComment: "/tweet/addComment"
+    addComment: "/tweet/addComment",
+    likeTweet: "/tweet/likeTweet",
+    postBookmarks: "/profile/addBookmark",
+    getRecommendations: "/profile/recommended/users",
 }

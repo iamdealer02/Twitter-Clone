@@ -1,0 +1,144 @@
+.welcome-page {
+    display: flex;
+    justify-content: space-between; /* Aligns children (logo and content) on both ends */
+    align-items: center; /* Centers children vertically */
+    align-self: left;
+    height: 90vh;
+    padding: 20 50%; /* Add padding on the sides */
+    background-color: #000; /* Assuming a black background */
+    color: #fff; /* Assuming white text */
+    font-family: Arial, sans-serif; /* Choose your font */
+  }
+  
+  .brand-logo {
+    /* Logo size is maintained */
+    flex: 1; /* Allows the logo to take up space but not more than necessary */
+    display: flex;
+    justify-content: center; /* Centers logo horizontally in its flex container */
+    align-items: center; /* Centers logo vertically */
+  }
+  
+  .content-container {
+    flex: 1; /* Allows content to take up the remaining space */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns content to the start of the flex container (to the right) */
+  }
+  
+  .formTitle .heading {
+    font-size: 2rem; /* Large font for the main heading */
+    font-weight: bold;
+  }
+  
+  .formTitle .subHeading {
+    font-size: 1.5rem; /* Slightly smaller font for the subheading */
+  }
+  
+  .alternative-actions {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
+  }
+  
+  .line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #aaa; /* Light gray lines */
+  }
+  
+  .or-text {
+    padding: 0 1rem;
+  }
+  
+  .welcome-button {
+    display: inline-block;
+    margin: 0.5rem 0;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    background-color: #09a5f3; /* Blue, typically associated with a 'Sign in with Google' button */
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .welcome-button.apple {
+    background-color: #000; /* Black button for 'Sign up with Apple' */
+    border: 1px solid #fff; /* White border for contrast */
+    color: white;
+  }
+  
+  .welcome-button.google {
+    background-color: #0b0909; /* Red, typically associated with a 'Continue with Google' button */
+    border: 1px solid #fff; /* White border for contrast */
+    color: white;
+
+  }
+  
+  .welcome-button:not(.login) {
+    width: 100%; /* Makes the buttons full width of their container */
+  }
+  
+  .welcome-button.login {
+    background-color: #09a5f3; /* A clear background for a less prominent 'Login' button */
+    color: #f3f5f6;
+    margin-top: 1rem; /* Extra spacing above the 'Login' button */
+    padding: 0.75rem 1.5rem;
+    display: inline-block;
+
+
+  }
+  
+  /* Additional styles for the alternative actions (the 'or' separator) */
+  .alternative-actions {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 2rem 0;
+  }
+  
+  .line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #aaa; /* Light gray lines */
+  }
+  
+  .or-text {
+    padding: 0 1rem;
+    color: #aaa;
+  }
+  
+  /* Style adjustments for text and prompts */
+  .formTitle .heading,
+  .formTitle .subHeading {
+    text-align: left;
+    font-style: normal; /* Makes the font italic */
+    font-weight: bold; /* Makes the font bold */
+  }
+  
+  .formTitle .heading {
+    font-size: 4rem; /* Increase the font size for heading */
+  }
+  
+  .formTitle .subHeading {
+    font-size: 2rem; /* Increase the font size for subheading */
+  }
+  
+  .welcome-prompt,
+  .welcome-actions p {
+    text-align: left;
+  }
+  
+  .welcome-prompt {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+  }
+  
+  .welcome-actions p {
+    margin-top: 1rem;
+    color: #aaa; /* Light gray for less emphasis */
+    font-size: 0.8rem;
+  }
+  

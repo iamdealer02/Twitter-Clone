@@ -12,6 +12,7 @@
     align-items: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    width: 100%;
     
 }
 .messageList{
@@ -53,7 +54,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 2%;
     border-bottom: rgb(47, 51, 54) solid 1px;
     border-top: rgb(47, 51, 54) solid 1px;
     cursor: pointer;
@@ -62,4 +62,17 @@
 .active{
     background-color: rgb(32, 35, 39) ;
     border-right: 2px solid #1da1f2;
+}
+.message-user-details{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.message-user{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+   
 }
