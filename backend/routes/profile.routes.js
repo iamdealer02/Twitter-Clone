@@ -21,7 +21,7 @@ router.post('/edit/:username', multer().array('images', 2), profileServices.edit
 
 router.post('/addBookmark/:bookmarks', profileServices.postBookmarks);
 router.get('/bookmarks/:username', profileServices.getBookmarks);
-router.get('/viewTweets/:username', profileTweetServices.viewUserTweets);
+
 router.get('/recommended/users', profileServices.recommendedAccounts);
 
 router.post('/poll/vote/:tweetId/:optionId', profileServices.voteInPoll);

@@ -37,14 +37,16 @@ const viewPosts = async (req, res) => {
 
 
         const tweetsData = await Promise.all(tweets.map(async (tweet) => {
-            if (tweet.media && tweet.media.data) {
-                tweet.media.data = tweet.media.data.toString('base64');
-            }
+
 
             let originalPoster = null;
             if (tweet.is_repost) {
                 originalPoster = await profileModel.findOne({ username: tweet.reposted_from.username });
             }
+            // check if tweet is liked
+            const liked = await likeModel.findOne({ userId: user._id, tweetId: tweet._id });
+            // check if tweet is bookmarked in bookmark array in profile model
+            const bookmarked = user.bookmarks.includes(tweet._id);
 
             return { tweet:{
                 _id: tweet._id,
@@ -55,12 +57,14 @@ const viewPosts = async (req, res) => {
                 emoji: tweet.emoji || null,
                 schedule: tweet.schedule || null,
                 poll: { question: tweet.poll?.question, options: tweet.poll?.options },
-                media: { data: tweet.media?.data || null, contentType: tweet.media?.contentType },
+                media:tweet.media || null,
                 retweet_count: tweet.retweets?.length,
                 retweeted: false, 
                 like: tweet.likes?.length,
                 comment_count: tweet.comments?.length,
                 is_repost: tweet.is_repost || false,
+                liked: liked ? true : false,
+                bookmarked: bookmarked ? true : false,
                 createdAt: tweet.createdAt,
                 reposted_from: {
                     tweet: {
@@ -71,7 +75,7 @@ const viewPosts = async (req, res) => {
                         emoji: tweet.reposted_from?.emoji || null,
                         schedule: tweet.reposted_from?.schedule || null,
                         poll: { question: tweet.reposted_from?.poll?.question, options: tweet.reposted_from?.poll?.options },
-                        media: { data: tweet.reposted_from?.media?.data || null, contentType: tweet.reposted_from?.media?.contentType },
+                        media: tweet.reposted_from?.media || null,
                         createdAt: tweet.reposted_from?.createdAt
                     },
                     userDetails: { username: originalPoster?.username, name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
@@ -83,6 +87,9 @@ const viewPosts = async (req, res) => {
         const retweetData = await Promise.all(retweets.map(async (retweet) => {
             if (retweet.originalTweetId) {
                 const originalTweet = retweet.originalTweetId;
+                // checking like and bookmark status
+                const liked = await likeModel.findOne({ userId: user._id, tweetId: originalTweet._id });
+                const bookmarked = user.bookmarks.includes(originalTweet._id);
 
                 return { tweet:
                 {_id: retweet._id,
@@ -93,10 +100,12 @@ const viewPosts = async (req, res) => {
                 emoji: null,
                 schedule: null,
                 poll: { question: null, options: null },
-                media: { data: null, contentType: null },
+                media: null,
                 retweet_count: null,
                 retweeted: true, 
                 like: retweet.likes?.length,
+                liked: liked ? true : false,
+                bookmarked: bookmarked ? true : false,
                 comment_count: retweet.comments?.length,
                 is_repost: true, 
                 createdAt: retweet.createdAt,
@@ -110,8 +119,7 @@ const viewPosts = async (req, res) => {
                         emoji: originalTweet.emoji || null,
                         schedule: originalTweet.schedule || null,
                         poll: { question: originalTweet.poll?.question, options: originalTweet.reposted_from?.poll?.options },
-                        media: { data: originalTweet.media?.data || null, contentType: originalTweet.reposted_from?.media?.contentType },
-                        createdAt: originalTweet.createdAt
+                        media: originalTweet.media || null,
                     },
                     userDetails: { username: originalTweet.username, name: originalTweet.name || null, userProfilePic: user.profile_pic || null }
                 
@@ -144,14 +152,20 @@ const viewReplies = async (req, res) => {
         console.log(replies)
 
         let originalPoster = null;
+       
+        
+        
 
         const replyData = replies.map(reply => {
+             // check like and bookmark status for original tweet
+                const liked = reply.tweetId.likes.includes(user._id);
+                const bookmarked = user.bookmarks.includes(reply.tweetId._id);
             return{ tweet:{
                 _id: reply._id,
                 content: reply.content,
                 createdAt: reply.createdAt,
                 tweetId:{
-                    _id: reply.tweetId._id,
+                    _id: reply.tweetId?._id,
                     username: reply.tweetId.username,
                     is_poll: reply.tweetId.poll?.question ? true : false,
                     tweet: reply.tweetId.tweet || null,
@@ -159,10 +173,12 @@ const viewReplies = async (req, res) => {
                     emoji: reply.tweetId.emoji || null,
                     schedule: reply.tweetId.schedule || null,
                     poll: { question: reply.tweetId.poll?.question, options: reply.tweetId.poll?.options },
-                    media: { data: reply.tweetId.media?.data || null, contentType: reply.tweetId.media?.contentType },
+                    media:reply.tweetId.media || null,
                     retweet_count: reply.tweetId.retweets?.length,
                     retweeted: false, 
                     like: reply.tweetId.likes?.length,
+                    liked: liked ? true : false,
+                    bookmarked: bookmarked ? true : false,
                     comment_count: reply.tweetId.comments?.length,
                     is_repost: reply.tweetId.is_repost || false,
                     createdAt: reply.tweetId.createdAt,
@@ -175,7 +191,7 @@ const viewReplies = async (req, res) => {
                             emoji: reply.tweetId.reposted_from?.emoji || null,
                             schedule: reply.tweetId.reposted_from?.schedule || null,
                             poll: { question: reply.tweetId.reposted_from?.poll?.question, options: reply.tweetId.reposted_from?.poll?.options },
-                            media: { data: reply.tweetId.reposted_from?.media?.data || null, contentType: reply.tweetId.reposted_from?.media?.contentType },
+                            media: reply.tweetId.reposted_from?.media || null,
                             createdAt: reply.tweetId.reposted_from?.createdAt
                         },
                         userDetails: { username: originalPoster?.username, name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
@@ -220,7 +236,7 @@ const viewLikes = async (req, res) => {
                     emoji: like.tweetId.emoji || null,
                     schedule: like.tweetId.schedule || null,
                     poll: { question: like.tweetId.poll?.question, options: like.tweetId.poll?.options },
-                    media: { data: like.tweetId.media?.data || null, contentType: like.tweetId.media?.contentType },
+                    media: like.tweetId.media || null,
                     retweet_count: like.tweetId.retweets?.length,
                     retweeted: false, 
                     like: like.tweetId.likes?.length,
@@ -236,7 +252,7 @@ const viewLikes = async (req, res) => {
                             emoji: like.tweetId.reposted_from?.emoji || null,
                             schedule: like.tweetId.reposted_from?.schedule || null,
                             poll: { question: like.tweetId.reposted_from?.poll?.question, options: like.tweetId.reposted_from?.poll?.options },
-                            media: { data: like.tweetId.reposted_from?.media?.data || null, contentType: like.tweetId.reposted_from?.media?.contentType },
+                            media: like.tweetId.reposted_from?.media || null,
                             createdAt: like.tweetId.reposted_from?.createdAt
                         },
                         userDetails: { username: originalPoster?.username, name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
