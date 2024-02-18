@@ -4,6 +4,8 @@ import BookmarkView from '../components/BookmarkView'
 import '../styles/bookmarkPage.css'
 import '../styles/bookmarkView.css'
 import SearchBar from '../components/SearchBar'
+import Recommendation from '../components/Recommendation';
+import TrendingHashtags from '../components/TrendingHashtags';
 
 function BookmarkPage() {
   return (
@@ -19,6 +21,8 @@ function BookmarkPage() {
           </div>
           <div className='homeWidgets'>
                 <SearchBar/>
+                <Recommendation/>
+                <TrendingHashtags/>
             </div>
 
            

@@ -10,6 +10,7 @@
 }
 .homeTaskbar{
     flex: 1;
+ 
 
 }
 .homeFeed{
@@ -22,3 +23,9 @@
 .homeWidgets{
     flex: 2;
 }
+/* Media query for tablets */
+@media (max-width: 768px) {
+    .bookmarkContent {
+      flex-direction: column;
+    }
+  }

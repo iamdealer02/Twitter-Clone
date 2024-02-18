@@ -1,0 +1,654 @@
+{
+	"info": {
+		"_postman_id": "32f88263-19f7-4ab7-a630-47b1cab1ea91",
+		"name": "Twitter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31644608",
+		"_collection_link": "https://grey-sunset-231870.postman.co/workspace/New-Team-Workspace~53856922-b171-48c7-8a71-87e75e107cfb/collection/31644608-32f88263-19f7-4ab7-a630-47b1cab1ea91?action=share&source=collection_link&creator=31644608"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required Content-Type header with value 'application/json'\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message is a non-empty string\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Message field is present in the response\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  pm.expect(responseData.message).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"pm.test(\"Response contains a token\", function () {\r",
+							"    // Parse the response body as JSON\r",
+							"    var jsonData = pm.response.json();\r",
+							"    // Check if the response contains a token\r",
+							"    pm.expect(jsonData.message).to.not.be.empty;\r",
+							"    pm.expect(jsonData.message).to.match(/[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_.+/=]+/);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVwYXNhbmEiLCJpYXQiOjE3MDgyNTUwNzcsImV4cCI6MTcwODI1ODY3N30.YIUUfsGWl__M5yEymT4XwKfFXyNm11fzCSn3l0BfVlw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": \"upasana\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}auth/login",
+					"host": [
+						"{{baseUrl}}auth"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user\": \"upasana\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}auth/login",
+					"host": [
+						"{{baseUrl}}auth"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tweets",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"UserDetails object should exist and be an object\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.tweetsData).to.be.an('array').that.is.not.empty;\r",
+							"    responseData.tweetsData.forEach(function(tweetData) {\r",
+							"        pm.expect(tweetData).to.have.property('userDetails').that.is.an('object');\r",
+							"        pm.expect(tweetData.userDetails).to.not.be.empty;\r",
+							"    });\r",
+							"});\r",
+							"pm.test(\"Response Content-Type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Is_poll field in the tweet object is a boolean\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.tweetsData).to.be.an('array');\r",
+							"    responseData.tweetsData.forEach(function (tweetData) {\r",
+							"        pm.expect(tweetData.tweet.is_poll).to.be.a('boolean');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Authorization bearer token exists\", function () {\r",
+							"     pm.expect(pm.request.headers.get('Authorization')).to.exist;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVwYXNhbmEiLCJpYXQiOjE3MDgyNTUwNzcsImV4cCI6MTcwODI1ODY3N30.YIUUfsGWl__M5yEymT4XwKfFXyNm11fzCSn3l0BfVlw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}tweet/getTweet",
+					"host": [
+						"{{baseUrl}}tweet"
+					],
+					"path": [
+						"getTweet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "like tweet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if status code is 200 (success)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check if response has a message indicating success\r",
+							"pm.test(\"Response has success message\", function () {\r",
+							"    const responseMessage = pm.response.json().message;\r",
+							"    pm.expect(responseMessage).to.be.oneOf([\"Like added successfully\", \"Like removed successfully\"]);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Check if response contains tweet details\r",
+							"pm.test(\"Response contains tweet details\", function () {\r",
+							"    pm.response.to.have.jsonBody(\"tweet\");\r",
+							"});\r",
+							"\r",
+							"// Optional: Validate tweet details if needed\r",
+							"pm.test(\"Validate tweet details\", function () {\r",
+							"    const tweet = pm.response.json().tweet;\r",
+							"\r",
+							"    // Validate like count\r",
+							"    pm.expect(tweet).to.have.property(\"like\").that.is.a(\"number\");\r",
+							"\r",
+							"    // Validate if tweet is liked\r",
+							"    pm.expect(tweet).to.have.property(\"liked\").that.is.a(\"boolean\");\r",
+							"});\r",
+							"\r",
+							"// call has token bearer\r",
+							"pm.test(\"Authorization bearer token exists\", function () {\r",
+							"     pm.expect(pm.request.headers.get('Authorization')).to.exist;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVwYXNhbmEiLCJpYXQiOjE3MDgyODQzNzQsImV4cCI6MTcwODI4Nzk3NH0.acF9zZLEl_MxnXVxnjowFQz4_A4NGuFS9ArqD5kU9Qw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}tweet/likeTweet/:tweetId",
+					"host": [
+						"{{baseUrl}}tweet"
+					],
+					"path": [
+						"likeTweet",
+						":tweetId"
+					],
+					"variable": [
+						{
+							"key": "tweetId",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if status code is 200 (success)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check if response has a message indicating success\r",
+							"pm.test(\"Response has success message\", function () {\r",
+							"    pm.response.to.have.jsonBody(\"message\", \"Comment added successfully\");\r",
+							"});\r",
+							"\r",
+							"// Check if response contains comment length\r",
+							"pm.test(\"Response contains comment length\", function () {\r",
+							"    pm.response.to.have.jsonBody(\"comment_length\");\r",
+							"});\r",
+							"\r",
+							"// making sure that the data is not empty\r",
+							"pm.test(\"Validate comment length\", function () {\r",
+							"    const commentLength = pm.response.json().comment_length;\r",
+							"    pm.expect(commentLength).to.be.a(\"number\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVwYXNhbmEiLCJpYXQiOjE3MDgyODQzNzQsImV4cCI6MTcwODI4Nzk3NH0.acF9zZLEl_MxnXVxnjowFQz4_A4NGuFS9ArqD5kU9Qw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"comment\": \"hey\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}tweet/addComment/:tweetId",
+					"host": [
+						"{{baseUrl}}tweet"
+					],
+					"path": [
+						"addComment",
+						":tweetId"
+					],
+					"variable": [
+						{
+							"key": "tweetId",
+							"value": "65d2345f6a66a67c1c3a2f29"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retweet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if status code is 200 (success)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check if response has a message indicating success\r",
+							"pm.test(\"Response has success message\", function () {\r",
+							"    const responseMessage = pm.response.json().message;\r",
+							"    pm.expect(responseMessage).to.be.oneOf([\"Retweet added successfully\", \"Retweet removed successfully\"]);\r",
+							"});\r",
+							"\r",
+							"// Check if response contains tweet details\r",
+							"pm.test(\"Response contains tweet details\", function () {\r",
+							"    pm.response.to.have.jsonBody(\"tweet\");\r",
+							"});\r",
+							"\r",
+							"// Validate tweet details if needed\r",
+							"pm.test(\"Validate tweet details\", function () {\r",
+							"    const tweet = pm.response.json().tweet;\r",
+							"\r",
+							"    // Validate retweet count\r",
+							"    pm.expect(tweet).to.have.property(\"retweet_count\").that.is.a(\"number\");\r",
+							"\r",
+							"    // Validate if tweet is retweeted\r",
+							"    pm.expect(tweet).to.have.property(\"retweeted\").that.is.a(\"boolean\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVwYXNhbmEiLCJpYXQiOjE3MDgyODczNTAsImV4cCI6MTcwODI5MDk1MH0.O8QproFzVQvrjZayzcFIMKzQIDLom5lXJfCMpOF0oAc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}tweet/retweet/:ogTweetId",
+					"host": [
+						"{{baseUrl}}tweet"
+					],
+					"path": [
+						"retweet",
+						":ogTweetId"
+					],
+					"variable": [
+						{
+							"key": "ogTweetId",
+							"value": "65d2345f6a66a67c1c3a2f29"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Replies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array of replies\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('replies').that.is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each reply has the expected structure\", function () {\r",
+							"    const replies = pm.response.json().replies;\r",
+							"    _.each(replies, function (reply) {\r",
+							"        pm.expect(reply).to.have.property('tweet').that.is.an('object');\r",
+							"        pm.expect(reply.tweet).to.have.property('_id').that.is.a('string');\r",
+							"        pm.expect(reply.tweet).to.have.property('content').that.is.a('string');\r",
+							"        pm.expect(reply.tweet).to.have.property('createdAt').that.is.a('string');\r",
+							"        pm.expect(reply.tweet).to.have.property('tweetId').that.is.an('object');\r",
+							"    \r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1aWNjIiwiaWF0IjoxNzA4Mjg2MzQ2LCJleHAiOjE3MDgyODk5NDZ9.dxEcUkdnJxFwA7TuhiG05aMyEaMaXJcxqhwq5Gn-JQs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}profile/replies/:username",
+					"host": [
+						"{{baseUrl}}profile"
+					],
+					"path": [
+						"replies",
+						":username"
+					],
+					"variable": [
+						{
+							"key": "username",
+							"value": "juicc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains user_details array\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property('user_details').that.is.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"User details have the expected structure\", function () {\r",
+							"    const userDetails = pm.response.json().user_details;\r",
+							"    pm.expect(userDetails.length).to.be.above(0); \r",
+							"    _.each(userDetails, function (userDetail) {\r",
+							"        pm.expect(userDetail).to.have.property('_id').that.is.a('string');\r",
+							"        pm.expect(userDetail).to.have.property('name').that.is.a('string');\r",
+							"        pm.expect(userDetail).to.have.property('bio').that.is.null;\r",
+							"        pm.expect(userDetail).to.have.property('location').that.is.a('string');\r",
+							"        pm.expect(userDetail).to.have.property('profile_picture').that.is.null;\r",
+							"        pm.expect(userDetail).to.have.property('cover_picture').that.is.null;\r",
+							"        pm.expect(userDetail).to.have.property('username').that.is.a('string');\r",
+							"        pm.expect(userDetail).to.have.property('email').that.is.a('string');\r",
+							"        pm.expect(userDetail).to.have.property('new_timestamp_column').that.is.a('string');\r",
+							"        pm.expect(userDetail).to.have.property('followers').that.is.an('array');\r",
+							"        pm.expect(userDetail).to.have.property('following').that.is.an('array');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}profile/juicc",
+					"host": [
+						"{{baseUrl}}profile"
+					],
+					"path": [
+						"juicc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//test for successful change\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response indicates successful password change\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"Password changed successfully\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"//test for missing params\r",
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response indicates missing parameters\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"Please fill out all fields\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"//test for user not found\r",
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response indicates user not found\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"User not found\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"//test for incorrect password\r",
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response indicates incorrect current password\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"Current password is incorrect\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"// test for matching passwords\r",
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response indicates new password must be different\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"New password must be different from current password\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"//test for internal server error\r",
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response indicates internal server error\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"Error while changing password\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1aWNjIiwiaWF0IjoxNzA4Mjg1ODM3LCJleHAiOjE3MDgyODk0Mzd9.GDPTTEFTptNiHqY53tnyawo08ggIsiXupH3Pw6MqR7w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n    \"currentPassword\": \"password\",\r\n    \"newPassword\": \"123\"\r\n\r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}settings/changePassword/:username",
+					"host": [
+						"{{baseUrl}}settings"
+					],
+					"path": [
+						"changePassword",
+						":username"
+					],
+					"variable": [
+						{
+							"key": "username",
+							"value": "juicc"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

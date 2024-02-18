@@ -4,11 +4,17 @@
     justify-content: space-between;
     align-items: flex-start;
     height: 70vh;
-    position: fixed;
+    position: relative;
  
     
 }
 
+/* for smaller screen remove all taskBar-text */
+@media (max-width: 1000px) {
+    .taskBarText {
+        display: none; 
+    }
+}
 .taskBarText{
     font-size: 18px;
     font-weight: 700;
@@ -60,4 +66,10 @@
     height: 50px;
     
 }
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .taskBarContainer {
+      flex: 0; /* Let it take up the space as needed */
+    }
+  }
 
