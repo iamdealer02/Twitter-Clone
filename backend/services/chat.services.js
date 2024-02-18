@@ -84,10 +84,16 @@ const getAllChat = async (req,res) => {
             console.log(chatItem.participants);
             // participants =[user1, user2]
             const participant = chatItem.participants.find(participant => participant !== user);
-            const participantData = await ProfileModel.findOne({ username: participant }, { username: 1, profile_pic: 1, name: 1 });
+            const participantData = await ProfileModel.findOne({ username: participant });
             return {
                 participants: chatItem.participants,
-                participantData: participantData,
+                participantData: {
+                    _id: participantData._id,
+                    username: participantData.username,
+                    profile_picture: participantData.profile_picture,
+                    name: participantData.name
+                
+                },
                 lastMessage: chatItem.messages.length > 0 ? chatItem.messages[chatItem.messages.length - 1] : null
             };
         }));
@@ -121,7 +127,7 @@ const isReceiverValid = async (req,res) => {
                     //send username, name and pfp from profile model
         const receiver_data = await ProfileModel.findOne({ username: receiver });
     
-        res.status(statusCode.success).json({message: true, receiver_data: {_id:receiver_data._id, username: receiver_data.username, name: receiver_data.name, profile_pic: receiver_data.profile_pic}});
+        res.status(statusCode.success).json({message: true, receiver_data: {_id:receiver_data._id, username: receiver_data.username, name: receiver_data.name, profile_picture: receiver_data.profile_picture}});
     }catch (error) {
         logger.error(`Error in chat.services.js => isReceiverValid() : ${error}`);
         res.status(statusCode.badRequest).json({message: 'Internal server error'});

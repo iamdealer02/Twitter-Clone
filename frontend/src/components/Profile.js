@@ -4,8 +4,8 @@ import '../styles/profilePage.css';
 import instance from '../constants/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import UserProfile from './UserProfile';
-import { Buffer } from 'buffer';
 import { useNavigate } from 'react-router-dom'
+import FollowBtn from './FollowBtn';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -25,9 +25,12 @@ export default function Profile() {
   });
 
   const [userValid, setUserValid] = useState(false)
-  const [userFollowed, setUserFollowed] = useState(false)  
+  const [userFollowed, setUserFollowed] = useState(false)
+  const [followerCount, setFollowerCount] = useState(0)
+  const [followingCount, setFollowingCount] = useState(0)
 
   const notify = (message) => toast.error(message);
+
 
   const fetchData = async () => {
     try {
@@ -79,6 +82,8 @@ export default function Profile() {
           following: userData?.following 
 
         });
+        setFollowerCount(userData?.followers?.length)
+        setFollowingCount(userData?.following?.length)
 
         const current_user = JSON.parse(localStorage.getItem('user')).username;
         // console.log(current_user)
@@ -92,6 +97,7 @@ export default function Profile() {
           const loggedInUserId = loggedInUserData._id
  
 
+        
 
 
         if ( userData.followers.includes(loggedInUserId)){
@@ -110,29 +116,11 @@ export default function Profile() {
       console.error('error :', error);
     }
   };
-  useEffect(() => {
-    fetchData(); 
-  }, []);
+
   
   useEffect(() => {
     fetchData();
   }, [username]);
-
-
-  const handleFollow = async () => {
-    try {
-      const token = JSON.parse(localStorage.getItem('user')).token;
-      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
- 
-      const postFollow = await instance.post(`/profile/follow/${userProfileObj._id}`, {});
-      setUserFollowed(!userFollowed); 
-      window.location.reload();
-
-
-    } catch (error) {
-      console.error('Error following/unfollowing user:', error);
-    }
-  };
 
 
   const handleFollowersClick = () => {
@@ -144,9 +132,7 @@ export default function Profile() {
   };
 
 
-
-
-
+  
 
 
   return (
@@ -160,15 +146,17 @@ export default function Profile() {
       <div className='profileDetail'>
         <UserProfile userProfileObj={userProfileObj}/>
 
-        {userValid ? (
-  <div className="edit-profile">
-    <button className="edit-profile" onClick={() => navigate(`/profile/edit/${username}`)}>Edit Profile</button>
-  </div>
-) : (
-  <div className={userFollowed ? "following-btn" : "follow-btn"}>
-    <button onClick={handleFollow}>{userFollowed ? 'Following' : 'Follow'}</button>
-  </div>
-)}
+        { 
+                    userValid ? (
+                        <div className="edit-profile">
+                            <button className="edit-profile" onClick={() => navigate(`/profile/edit/${username}`)}>Edit Profile</button>
+                        </div>
+                    ) : userProfileObj._id !== null && userProfileObj._id !== undefined ?(
+                      <div>
+                        <FollowBtn userFollowed={userFollowed} setUserFollowed={setUserFollowed} userProfileObj={userProfileObj} setFollowerCount={setFollowerCount} followerCount={followerCount} />
+                     </div>
+                    )   : null
+                }
 
       </div>
 
@@ -177,13 +165,11 @@ export default function Profile() {
       <div className="joined-date">Joined {userProfileObj?.joined_date}</div>
       <div className="location"> {userProfileObj?.location}</div>
       <div className="followers-followings" onClick={handleFollowingClick}>
-                {userProfileObj?.following?.length} Following
+                {followingCount} Following
             </div>
             <div className="followers-followings" onClick={handleFollowersClick}>
-                {userProfileObj?.followers?.length} Followers
+                {followerCount} Followers
             </div>
-
-
       
       <ToastContainer />
     </div>

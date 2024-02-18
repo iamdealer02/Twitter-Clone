@@ -1,10 +1,11 @@
-const { error } = require("winston");
+
 const pool = require("../boot/database/db_connect");
 const statusCodes = require("../constants/statusCode");
 const logger = require("../middleware/winston");
 const profileModel = require("../models/profileModel");
 const TweetModel = require("../models/tweets");
 const jwt = require("jsonwebtoken");
+const saveImages = require('../aws/s3Bucket');
 const likeModel = require("../models/like");
 const retweetModel = require("../models/retweet");
 
@@ -70,58 +71,76 @@ try {
 
 
 const editUserProfile = async (req, res) => {
-
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.decode(token);
-    
-    const username = decodedToken.id;
-    if (!decodedToken) {
-        return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
-    }
-
-    const userDetails = req.body.user_details;
-
-
-
-    if (!userDetails || userDetails.length === 0) {
-        return res.status(400).json({ error: 'Invalid user details provided' });
-    }
-    
-    const { name, bio, location, profile_picture, cover_picture } = userDetails[0];
-    
-    const client = await pool.connect();
-
-
-    try{        
-        let mongoUser = await profileModel.findOne({ username });
-
-        if (!mongoUser) {
-            await newMongoModel(req, res);
-        } else {
-            mongoUser.name = name || mongoUser.name || null;
-            mongoUser.profile_picture = profile_picture || mongoUser.profile_picture || null;
-            mongoUser.cover_picture = cover_picture || mongoUser.cover_picture || null;
-            
-
-            await mongoUser.save();
-
-
-            const sqlQuery = 'UPDATE users SET bio = $1, location = $2 WHERE username = $3';
-            const sqlValues = [bio, location, username]
-            const sqlExecution = await client.query ( sqlQuery, sqlValues)
-            console.log(sqlExecution)  }
-            res.status(200).json({ message: 'User profile updated in MongoDB' });
+    try {
+     
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
         
+        if (!decodedToken) {
+            return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
+        }
+
+        const username = decodedToken.id;
+        const { name, bio, location } = req.body;
+
+        
+
+        console.log(name, bio, location)
+        console.log(req.files)
+        let profile_picture_url = null;
+        let cover_picture_url = null;
+
+       
+        if (req.files && req.files.length >= 2) {
+            // Access profile picture and cover picture files from req.files array
+            const [profile_picture, cover_picture] = req.files;
+            console.log(profile_picture, cover_picture)
+            // Process profile picture
+            if (profile_picture) {
+                image = profile_picture.buffer;
+                console.log(image)
+                profile_picture_url = await saveImages( profile_picture, image) ;
+            }
+
+            // Process cover picture
+            if (cover_picture) {
+                image = cover_picture.buffer;
+                console.log(image)
+                cover_picture_url = await saveImages(cover_picture, image) ;
+            }
+        }
+
+        const client = await pool.connect();
+
+        try {        
+            let mongoUser = await profileModel.findOne({ username });
+
+            if (!mongoUser) {
+                await newMongoModel(req, res);
+            } else {
+                mongoUser.name = name || mongoUser.name || null;
+                mongoUser.profile_picture = profile_picture_url || mongoUser.profile_picture || null;
+                mongoUser.cover_picture = cover_picture_url || mongoUser.cover_picture || null;
+
+                await mongoUser.save();
+
+                const sqlQuery = 'UPDATE users SET bio = $1, location = $2 WHERE username = $3';
+                const sqlValues = [bio, location, username];
+                await client.query(sqlQuery, sqlValues);
+            }
+
+            res.status(200).json({ message: 'User profile updated successfully' });
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } finally {
+            client.release();
+        }
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
-
-    }finally{
-        client.release();
     }
-
 };
-
 
 const voteInPoll = async (req, res) => {
     const {tweetId, optionId} = req.params;
@@ -417,17 +436,61 @@ const followUser = async(req, res) => {
         }
 
     }
-
-
-
-
-
+    const recommendedAccounts = async (req, res) => {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
+        const username = decodedToken.id;
+       
+        if (!decodedToken) {
+            return res.status(401).json({ message: 'Session Expired' });
+        }
+        try {
+            // Find the user document with the given username and populate the 'followers' field
+            const user = await profileModel.findOne({ username }).populate('followers');
     
-
-
-
-
-
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+    
+            // Extract the followers from the populated field
+            const followers = user.followers.map(follower => ({
+                _id: follower._id,
+                username: follower.username,
+                name: follower.name,
+                profile_picture: follower.profile_picture
+            }));
+    
+            // Find uncommon followers 
+            const uncommonFollowing = followers.filter(follower => !user.following.includes(follower._id));
+    
+            // Ensure there are at least 5 recommendations
+            if (uncommonFollowing.length < 5) {
+                const recentUsers = await profileModel.find({ username: { $ne: username } }).limit(5 - uncommonFollowing.length);
+    
+                // Filter recentUsers to exclude users already followed by the current user or already in uncommonFollowing
+                const filteredRecentUsers = recentUsers.filter(recentUser => {
+                    return !user.following.includes(recentUser._id) && !uncommonFollowing.some(f => f._id.toString() === recentUser._id.toString());
+                });
+    
+                // Add filteredRecentUsers to uncommonFollowing
+                filteredRecentUsers.forEach(recentUser => {
+                    uncommonFollowing.push({
+                        _id: recentUser._id,
+                        username: recentUser.username,
+                        name: recentUser.name,
+                        profile_picture: recentUser.profile_picture
+                    });
+                });
+            }
+    
+            // You can then send the uncommon following as a response
+            res.status(200).json({ uncommonFollowing });
+        } catch (error) {
+            console.error('Error fetching recommended accounts:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    };
+    
 
 
 module.exports = {
@@ -438,9 +501,7 @@ module.exports = {
     followUser,
     getFollowers,
     getFollowings,
-
-
-
     voteInPoll,
+    recommendedAccounts
 
 };

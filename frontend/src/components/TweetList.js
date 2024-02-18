@@ -5,7 +5,7 @@ import InteractionButtons from './interactionButtons';
 
 
 const TweetList = ({tweets, setTweets, userProfileObj}) => {
-
+  console.log(tweets)
   return (
     <div className="news-feed">
         <div className="tweet-list"> 
