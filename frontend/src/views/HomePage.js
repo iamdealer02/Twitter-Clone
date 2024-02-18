@@ -173,7 +173,7 @@ function HomePage() {
 
   return (
     <div>
-                <ToastContainer 
+      <ToastContainer 
     position='top-center'
     hideProgressBar={true}
     newestOnTop={false}

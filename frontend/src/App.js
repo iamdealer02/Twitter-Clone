@@ -12,6 +12,7 @@ import FollowersPage from './views/FollowersPage';
 import FollowingPage from './views/FollowingPage';
 import SettingsPage from './views/SettingsPage';
 import WelcomePage from './views/WelcomePage';
+import TweetPage from './views/TweetPage';
 
 
 function App() {
@@ -58,6 +59,9 @@ function App() {
 
           <Route element={<PrivateRoute/>}>
             <Route path="/settings/:username" element={<SettingsPage/>}/>
+          </Route>
+          <Route element={<PrivateRoute/>}>
+            <Route path="/tweet/:tweet_id" element={<TweetPage/>}/>
           </Route>
         </Routes>
   );

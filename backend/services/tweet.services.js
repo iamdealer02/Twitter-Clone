@@ -417,6 +417,33 @@ const getTweet = async (req, res) => {
         }
     }
     
+    // getting a particular tweet and its comments
+    const getTweetById = async (req, res) => {
+        const { tweetId } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
+        if (!decodedToken) {
+            return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
+        }
+        const username = decodedToken.id;
+        try {
+            const tweet = await TweetModel.findOne({ _id: tweetId }).populate('comments').exec();
+            // get the user details of the tweet
+            // users who have posted the comment
+            // tweet, userDetails, comments{ comment, userDetails}
+            const user = await profileModel.findOne({ username: tweet.username });
+            const userDetails = { username: user.username, name: user.name, profile_picture: user.profile_picture };
+            const comments = await Promise.all(tweet.comments.map(async (comment) => {
+                const user = await profileModel.findOne({ _id: comment.userId });
+                return { comment: comment.content, userDetails: { username: user.username, name: user.name, profile_picture: user.profile_picture } };
+            }));
+            const userProfileObj = await profileModel.findOne({ username: username });
+            return res.status(statusCode.success).json({ tweet: { tweet, userDetails }, comments, userProfileObj:{_id:userProfileObj._id, username: userProfileObj.username, name: userProfileObj.name, profile_picture: userProfileObj.profile_picture    } });
+        } catch (error) {
+            logger.error('Error while retrieving the tweet and comments', error);
+            return res.status(statusCode.queryError).json({ message: 'Error while retrieving the tweet and comments' });
+        }
+    };
     
 module.exports = {
     createTweet,
@@ -425,6 +452,7 @@ module.exports = {
     retweet,
     repost,
     likeTweet,
-    trending_hashtags
+    trending_hashtags,
+    getTweetById
 
 };

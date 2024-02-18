@@ -16,4 +16,5 @@ export const requests = {
     postBookmarks: "/profile/addBookmark",
     getRecommendations: "/profile/recommended/users",
     getHashtags: "/tweet/trending/hashtags",
+    getTweetById: "/tweet/",
 }
