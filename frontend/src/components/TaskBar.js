@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import '../styles/taskbar.css'
 import { useNavigate } from 'react-router-dom'
 import useSocket from '../hooks/useSocket'
+import Logout from './Logout'
 
 
 export default function TaskBar() {
@@ -147,11 +148,17 @@ export default function TaskBar() {
                 </div>
 
             </div>
+            
             <div className='taskBarPostButton'>
                 <button className='taskBarPostBtn' onClick={ () => navigate(`/home`)}>
                     Post
                 </button>
             </div>
+
+            <div className="logoutButton">
+                <Logout />      
+            </div>
+
 
         </div>
     </div>

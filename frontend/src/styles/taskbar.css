@@ -15,7 +15,8 @@
     color: #fffefe;
 }
 
-.taskbarUtil{
+.taskbarUtil,
+.logout{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -45,7 +46,7 @@
 }
 
 .taskBarPostBtn{
-/* big button */
+
     background-color: #1da1f2;
     color: #fffefe;
     border-radius: 9999px;
@@ -59,3 +60,4 @@
     height: 50px;
     
 }
+
