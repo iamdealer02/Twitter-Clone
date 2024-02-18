@@ -7,6 +7,8 @@ import UserProfile from './UserProfile';
 import { useNavigate } from 'react-router-dom';
 import ProfilePost from './ProfilePost';
 import ProfileReplies from './ProfileReplies';
+import ProfileLike from './ProfileLike';
+import ProfileMedia from './ProfileMedia';
 import FollowBtn from './FollowBtn';
 
 export default function Profile() {
@@ -54,13 +56,7 @@ export default function Profile() {
        
         const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
 
-        // const coverPicBuffer = Buffer.from(userData.cover_picture.data);
 
-        // const base64 = btoa(coverPicBuffer)
-        // console.log('bin data', base64);
-        // const base64Cover = `data:${userData.cover_picture.contentType};base64,${coverPicBuffer.toString('base64')}`;
-        
-        
         //update the components state with extracted data from backend      
         setUserProfileObj({
           _id: userData?._id,           
@@ -200,8 +196,8 @@ export default function Profile() {
 
       {activeTab === 'posts' && <ProfilePost userProfileObj={userProfileObj} />}
       {activeTab === 'replies' && <ProfileReplies userProfileObj={userProfileObj} />}
-      {/* {activeTab === 'likes' && <ProfileLikes />}
-      {activeTab === 'media' && <ProfileMedia />} */}
+      {activeTab === 'likes' && <ProfileLike userProfileObj={userProfileObj}/>}
+      {activeTab === 'media' && <ProfileMedia userProfileObj={userProfileObj} />}
     </div>
     <div className="views-container">
       

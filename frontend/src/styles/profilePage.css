@@ -147,47 +147,33 @@
   .profile-tweet-card {
     border-bottom: 2px solid #ffffff;
     border-radius: 5px;
-    margin-bottom: 10px;
-    
+    margin-bottom: 10px;  
    
   }
   
 
   .comments {
-    border: 1px solid #363636; /* Add border */
-    border-radius: 5px; /* Add border radius for rounded corners */
-    padding: 1 rem; /* Add padding inside the box */
-    display: flex; 
-    margin-bottom: 10px;/* Use flexbox for layout */
-  }
-
-  
-  .comment-profile img{
-    background-color: white;
-    border-radius: 50%;
-    height: 40px;
-
-  }
-
-  .comment-name {
-    font-weight: bold;
-    margin-right: 5px;
-  }
-  
-  .comment-username {
-    color: #6b6b6b; /* Adjust color to match Twitter */
-    margin-right: 5px; /* Add some space between username and date */
-  }
-  
-  .comment-date {
-    color: #6b6b6b; /* Adjust color to match Twitter */
-    margin-right: 5px; /* Add some space between date and content */
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: #1f1f1f;
+    border-radius: 10px; 
   }
   
   .comment-content {
-    margin-top: 5px; /* Add margin between date and content */
+    font-size: 20px; 
+    line-height: 1.5; 
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif; 
   }
   
+
+  .comment-date {
+    color: #6b6b6b; 
+    margin-right: 5px; 
+    font-size: 15px;
+  }
+  
+
 
   .tab-buttons {
     display: flex;
@@ -207,7 +193,7 @@
     font-weight: bold;
     color: #ffffff;
     font-weight: bold;
-    border-bottom: 2px solid #1da1f2;
+
   }
   
 

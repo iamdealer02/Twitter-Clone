@@ -42,8 +42,7 @@ export default function ProfilePost({userProfileObj}) {
   return (
     <div>
       <div className="tweet-list">
-        {userProfileObj && postObj ? (
-          postObj?.map((tweet, key) => (
+        {userProfileObj && postObj?.map((tweet, key) => (
             <div className='tweet-card'> 
               <MiniUserDetail 
                 key={tweet.tweet._id}
@@ -54,12 +53,14 @@ export default function ProfilePost({userProfileObj}) {
               <InteractionButtons tweet={tweet} setTweets={setPostObj} userProfileObj={userProfileObj}/>
             </div>
           ))
-        ) : (
-          <p>No tweets to display</p>
-        )}
-      </div>
-    </div>
-  );
-
+      
         }
+      </div> 
+      
+
+     </div>
+    
+  )
+
+        };
   

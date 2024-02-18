@@ -45,6 +45,14 @@ useEffect(() => {
 }, [])
 
 
+const formatMonthAndDate = (createdAt) => {
+  const date = new Date(createdAt);
+  const month = date.toLocaleString('default', { month: 'short' });
+  const day = date.getDate();
+  return `${month} ${day}`;
+};
+
+
 return (
     
     <div>
@@ -62,8 +70,11 @@ return (
 
       <div className="comments">
      <UserProfile userProfileObj={userProfileObj} messagebox={true} searchbox={true}/>
+     <span className="comment-date"> • {formatMonthAndDate(tweet.contentData.createdAt)}</span>
      <p>
-    <span className="comment-content">{tweet.contentData.content}</span>
+ <span className="comment-content" > {tweet.contentData.content}</span>
+    
+
     </p>
   
    
