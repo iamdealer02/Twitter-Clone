@@ -23,13 +23,13 @@ export default function ProfileReplies({userProfileObj}) {
             // set repliesObj as tweet and userDetail
             if (repliesArray.length > 0){
                 setRepliesObj((prevTweets) => {
-                
                     return repliesArray.map((tweet) => (
-                      console.log(tweet.tweet.tweetId),
-                      { tweet: tweet.tweet.tweetId, userDetails: userProfileObj }));  
+                     
+                      { tweet: tweet.tweet.tweetId, userDetails: userProfileObj, contentData: tweet.tweet })); 
+                     
                 })
             }
-         
+        
 
         } catch (error) {
             console.error('error fetching replies:' , error)
@@ -37,7 +37,7 @@ export default function ProfileReplies({userProfileObj}) {
     };
   
 
-    
+    console.log('replies:', repliesObj)
 
 
 useEffect(() => {
@@ -63,7 +63,7 @@ return (
       <div className="comments">
      <UserProfile userProfileObj={userProfileObj} messagebox={true} searchbox={true}/>
      <p>
-    <span className="comment-content">{tweet.tweet.content}</span>
+    <span className="comment-content">{tweet.contentData.content}</span>
     </p>
   
    
