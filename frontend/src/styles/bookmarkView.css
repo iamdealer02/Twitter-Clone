@@ -1,0 +1,37 @@
+.bookmarks-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  background: #030303; /* Dark theme background color */
+  border-radius: 8px; /* Add border radius for a softer look */
+}
+
+.bookmarks-heading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ebf0f5;
+  width: 100%;
+  text-align: left;
+  padding: 1rem; /* Adjust padding for better alignment */
+  margin-bottom: 0;
+}
+
+.bookmarks-feed {
+  flex-direction: row;
+}
+
+.bookmarks-tweet {
+  font-size: 1rem;
+  color: #e5e3e3;
+  width: 100%;
+  /* Increase padding for better spacing */
+  border-bottom: solid #2f3336;
+}
+
+.loading-message {
+  font-size: 1rem;
+  color: #ebf0f5;
+  text-align: center;
+  width: 100%;
+  padding: 1rem; /* Add padding for better spacing */
+}

@@ -4,7 +4,7 @@ import { requests} from '../constants/requests'
 import instance from '../constants/axios'
 import useSocket from '../hooks/useSocket'
 
-export default function QuotePopUp({quotePopUp, setQuotePopUp, tweet, setTweets, userProfileObj}) {
+export default function QuotePopUp({quotePopUp,quoteUpdate, setQuotePopUp, tweet, setTweets, userProfileObj}) {
   const [comment, setComment] = useState('');
   const {state} = useSocket();
   const socket = state.socket;
@@ -16,19 +16,16 @@ export default function QuotePopUp({quotePopUp, setQuotePopUp, tweet, setTweets,
       const token = JSON.parse(localStorage.getItem('user')).token;
       instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const response = await instance.post(requests.repost + '/' + tweet.tweet._id, {tweet: comment});
-      console.log('response:', response);
-      console.log('userDetails:', tweet.userDetails)
+
       // creating a new post with the same content
       // add reposted_from to the tweet as tweet.userDetails
+      if (quoteUpdate) {
+        setTweets((prevTweets) => {
+          return [{tweet: response.data.tweetsData, userDetails: userProfileObj}, ...prevTweets];
+      } 
+      );
+      }
 
-      setTweets((prevTweets) => {
-        return [{tweet: response.data.tweetsData, userDetails: userProfileObj}, ...prevTweets];
-    } 
-    );
-      const type='tweet';
-      const data = {
-          tweet: response.data.tweetsData, userDetails: userProfileObj}
-      socket.emit('live_feed', {type, data});
       
     } catch(error) {
       console.log('error:', error);

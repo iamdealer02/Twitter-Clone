@@ -4,7 +4,7 @@
     justify-content: center;
     padding-right: 10rem;
     padding-left: 10rem;
-    padding-bottom: 2rem;
+
 
 
 }
@@ -16,7 +16,7 @@
 
 .profileFeed{
     border: rgb(47, 51, 54) solid 1px;
-    height: 100vh;
+
     flex: 3 1;
 }
 
@@ -128,34 +128,13 @@
 
 
   .views-box {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    border-bottom: rgb(47, 51, 54) solid 1px;
-  }
+    display: inline-block;
 
-  .views-container {
-    display: flex;
-    justify-content: space-around;
-    position: relative;   
-    text-align: center;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    padding: 30px;
-  }
-
-
-  .views-container button{
-    background-color: rgba(255, 255, 255, 0);
-    border: 0px solid rgb(121, 121, 121);
-    color: #cbcbcb;
 
   }
 
 
-  .views-container:hover {
-    box-shadow: #555;    
-    background-color: #1e1e1e;
-  }
+
 
   .profileDetail{
     display: flex;
@@ -163,6 +142,75 @@
     justify-content: space-between;
  
   }
+
+
+  .profile-tweet-card {
+    border-bottom: 1px solid #404041;
+    border-radius: 5px;
+    margin-bottom: 10px;  
+   
+  }
+  
+
+  .comments {
+    padding: 5px;
+    border: 1px solid #404041;
+    background-color: #141414;
+    border-radius: 10px; 
+  }
+  
+  .comment-content {
+    font-size: 20px; 
+    line-height: 1.5; 
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif; 
+  }
+  
+
+  .comment-date {
+    color: #6b6b6b; 
+    margin-right: 5px; 
+    font-size: 15px;
+  }
+  
+
+
+  .tab-buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .tab-buttons button {
+    border: none;
+    background-color: transparent;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #525252;
+  }
+  
+  .tab-buttons button.active {
+    font-weight: bold;
+    color: #ffffff;
+    font-weight: bold;
+
+  }
+  
+
+  .total-post-count {
+    background-color: #000000;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+
+
+
+
+
+
+
 
 
 
