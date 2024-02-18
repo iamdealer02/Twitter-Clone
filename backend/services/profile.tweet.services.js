@@ -13,25 +13,14 @@ const likeModel = require('../models/like')
 
 const viewPosts = async (req, res) => {
 
-
-
+    // get name form params
     const { username}= req.params;
-
-
     try {
 
-    // const token = req.headers.authorization.split(' ')[1];
-    // const decodedToken = jwt.decode(token);
-    
-    // const username = decodedToken.id;
-    // if (!decodedToken) {
-    //     return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
-    // } 
-
-
+       
         const user = await profileModel.findOne({ username }); 
-
-
+        
+         // fetch from mongodb and populate according to the field in that collection
         const tweets = await TweetModel.find({ username }).sort({ createdAt: -1 }).populate('reposted_from').exec();
         const retweets = await retweetModel.find({ userId: user._id }).sort({ createdAt: -1 }).populate('originalTweetId').exec();
 
@@ -157,7 +146,9 @@ const viewReplies = async (req, res) => {
         
 
         const replyData = replies.map(reply => {
-             // check like and bookmark status for original tweet
+
+
+             // check like and bookmark status
                 const liked = reply.tweetId.likes.includes(user._id);
                 const bookmarked = user.bookmarks.includes(reply.tweetId._id);
             return{ tweet:{
@@ -224,7 +215,11 @@ const viewLikes = async (req, res) => {
         let originalPoster = null;
 
         const likeData = likes.map(like => {
-            return{tweet:{_id: like._id,
+            const liked = like.tweetId.likes.includes(user._id);
+            const bookmarked = user.bookmarks.includes(like.tweetId._id);
+            
+            return{tweet:{
+                _id: like._id,
                 content: like.content,
                 createdAt: like.createdAt,
                 tweetId:{
@@ -240,6 +235,8 @@ const viewLikes = async (req, res) => {
                     retweet_count: like.tweetId.retweets?.length,
                     retweeted: false, 
                     like: like.tweetId.likes?.length,
+                    liked: liked ? true : false,
+                    bookmarked: bookmarked ? true : false,
                     comment_count: like.tweetId.comments?.length,
                     is_repost: like.tweetId.is_repost || false,
                     createdAt: like.tweetId.createdAt,
@@ -261,7 +258,7 @@ const viewLikes = async (req, res) => {
         });
 
         return res.status(statusCodes.success)
-        .json({ likeData})
+        .json({ likes: likeData})
 
     } catch( error){
         logger.error(' error while retrieving likes', error);
@@ -273,12 +270,75 @@ const viewLikes = async (req, res) => {
 };
 
 
-// const viewMedia = async (req, res) => {
+const viewMedia = async ( req, res) => {
+    const { username} = req.params;
 
-//     };
+    try{
+
+        const user = await profileModel.findOne({ username });
+        const tweets = await TweetModel.find({ username }).sort({ createdAt: -1 })
+        
+
+        const mediaData = await Promise.all(tweets.map(async(tweet) => {
+            const media = tweet.media || null;
+            if (media && media.length > 0){
+
+       
+                if (tweet.is_repost) {
+                    originalPoster = await profileModel.findOne({ username: tweet.reposted_from.username });
+                }
+
+                const liked = await likeModel.findOne({ userId: user._id, tweetId: tweet._id });
+                const bookmarked = user.bookmarks.includes(tweet._id);
+
+
+                return { tweet:{
+                    _id: tweet._id,
+                    username: tweet.username,
+                    is_poll: tweet.poll?.question ? true : false,
+                    tweet: tweet.tweet || null,
+                    gif: tweet.gif || null,
+                    emoji: tweet.emoji || null,
+                    schedule: tweet.schedule || null,
+                    poll: { question: tweet.poll?.question, options: tweet.poll?.options },
+                    media:tweet.media || null,
+                    retweet_count: tweet.retweets?.length,
+                    retweeted: false, 
+                    like: tweet.likes?.length,
+                    comment_count: tweet.comments?.length,
+                    is_repost: tweet.is_repost || false,
+                    liked: liked ? true : false,
+                    bookmarked: bookmarked ? true : false,
+                    createdAt: tweet.createdAt,
+
+                }};
+            }
+            
+        }));
+
+        const filteredMediaData = mediaData.filter(item => item !== undefined);
+
+   
+
+        return res.status(statusCodes.success)
+        .json({ medias: filteredMediaData})
+
+
+    } catch ( error) {
+        logger.error(' error while retrieving replies', error);
+        return res.status(statusCodes.badGateway)
+        .json({ message: ' error while retrieving replies'})
+    }
+
+
+}
+
+
+
 
 module.exports = {
     viewPosts,
     viewReplies,
-    viewLikes
+    viewLikes,
+    viewMedia
 };

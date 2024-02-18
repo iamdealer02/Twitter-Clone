@@ -6,7 +6,7 @@ const profileModel = require("../models/profileModel");
 const TweetModel = require("../models/tweets");
 const jwt = require("jsonwebtoken");
 const saveImages = require('../aws/s3Bucket');
-const profileTweetServices = require('../services/profile.tweet.services');
+
 
 
 const fetchFromSql = async (username) => {

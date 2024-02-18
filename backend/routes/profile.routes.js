@@ -11,6 +11,7 @@ router.get('/:username', profileServices.getUserProfile);
 router.get('/posts/:username', profileTweetServices.viewPosts);
 router.get('/replies/:username', profileTweetServices.viewReplies);
 router.get('/likes/:username', profileTweetServices.viewLikes);
+router.get('/media/:username', profileTweetServices.viewMedia);
 
 
 
