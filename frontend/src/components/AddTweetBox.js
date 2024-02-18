@@ -3,7 +3,6 @@ import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
 import {requests} from '../constants/requests'  // api endpoints
-import UserProfile from './UserProfile';
 
 
 

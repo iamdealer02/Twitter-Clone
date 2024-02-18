@@ -4,28 +4,24 @@ import '../styles/profilePage.css';
 import instance from '../constants/axios';
 import { toast, ToastContainer } from 'react-toastify';
 import UserProfile from './UserProfile';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import ProfilePost from './ProfilePost';
+import ProfileReplies from './ProfileReplies';
+import ProfileLike from './ProfileLike';
+import ProfileMedia from './ProfileMedia';
+import PostCount from './PostCount';
 import FollowBtn from './FollowBtn';
 
 export default function Profile() {
   const navigate = useNavigate();
   const {username} = useParams();
 
-  const [userProfileObj, setUserProfileObj] = useState({
-    _id: null,
-    name: '',
-    bio: '',
-    profile_picture: [],
-    cover_picture: [],
-    username: '',
-    joined_date: '',
-    location : '',
-    followers:  [],
-    following: []
-  });
+  const [userProfileObj, setUserProfileObj] = useState({});
 
   const [userValid, setUserValid] = useState(false)
   const [userFollowed, setUserFollowed] = useState(false)
+
+  const [activeTab, setActiveTab] = useState('posts');
   const [followerCount, setFollowerCount] = useState(0)
   const [followingCount, setFollowingCount] = useState(0)
 
@@ -54,20 +50,11 @@ export default function Profile() {
         const userData = userArray[0];
         console.log(userData)
 
-        // const imgData = userData.cover_picture.data;
-        // console.log("data:  ", imgData)
-        // console.log('cover pic data: ', userData.cover_picture.data)
 
        
         const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
 
-        // const coverPicBuffer = Buffer.from(userData.cover_picture.data);
 
-        // const base64 = btoa(coverPicBuffer)
-        // console.log('bin data', base64);
-        // const base64Cover = `data:${userData.cover_picture.contentType};base64,${coverPicBuffer.toString('base64')}`;
-        
-        
         //update the components state with extracted data from backend      
         setUserProfileObj({
           _id: userData?._id,           
@@ -132,12 +119,18 @@ export default function Profile() {
   };
 
 
-  
+  const handleClick = (tab) => {
+    setActiveTab(tab);
+  };
+
 
 
   return (
     <div className="profileFeed">
     <div className="profile-box">
+      <div>
+        <PostCount/>
+      </div>
     <div className="cover-picture">
     {userProfileObj?.cover_picture && (
         <img src={userProfileObj?.cover_picture} alt="Cover" />)}
@@ -173,14 +166,48 @@ export default function Profile() {
       
       <ToastContainer />
     </div>
-    <div className="views-box">
-    <div className="views-container"><button className="posts">Posts</button></div>
-    <div className="views-container"><button className="replies">Replies</button></div>
-    <div className="views-container"><button className="likes">Likes</button></div>
-    <div className="views-container"><button className="media">Media</button></div>
+   
+    <div>
+      <div className="tab-buttons">
+        <button
+          className={activeTab === 'posts' ? 'active' : ''}
+          onClick={() => handleClick('posts')}
+        >
+          Posts
+        </button>
+        <button
+          className={activeTab === 'replies' ? 'active' : ''}
+          onClick={() => handleClick('replies')}
+        >
+          Replies
+        </button>
+        <button
+          className={activeTab === 'likes' ? 'active' : ''}
+          onClick={() => handleClick('likes')}
+        >
+          Likes
+        </button>
+        <button
+          className={activeTab === 'media' ? 'active' : ''}
+          onClick={() => handleClick('media')}
+        >
+          Media
+        </button>
+      </div>
+
+      {activeTab === 'posts' && <ProfilePost userProfileObj={userProfileObj} />}
+      {activeTab === 'replies' && <ProfileReplies userProfileObj={userProfileObj} />}
+      {activeTab === 'likes' && <ProfileLike userProfileObj={userProfileObj}/>}
+      {activeTab === 'media' && <ProfileMedia userProfileObj={userProfileObj} />}
+    </div>
+    <div className="views-container">
+      
+
+      </div>
+
+  
 
     </div>
 
-    </div>
   );
 }

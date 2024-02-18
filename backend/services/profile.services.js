@@ -9,6 +9,8 @@ const saveImages = require('../aws/s3Bucket');
 const likeModel = require("../models/like");
 const retweetModel = require("../models/retweet");
 
+
+
 const fetchFromSql = async (username) => {
     const client = await pool.connect();
     try{
@@ -18,6 +20,9 @@ const fetchFromSql = async (username) => {
         client.release();
     }
 };
+
+
+
 
 
 
@@ -503,5 +508,6 @@ module.exports = {
     getFollowings,
     voteInPoll,
     recommendedAccounts
+
 
 };
