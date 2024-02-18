@@ -6,10 +6,13 @@ import InteractionButtons from './interactionButtons';
 import '../styles/tweetList.css'
 
 
+
 export default function ProfilePost({userProfileObj}) {
 
   const {username} = useParams();
   const [postObj, setPostObj] = useState([]);
+
+
 
   const fetchProfilePosts = async () => {
       
@@ -17,16 +20,17 @@ export default function ProfilePost({userProfileObj}) {
       const response = await instance.get(`/profile/posts/${username}`); 
 
       const postArray = response.data.posts;
- 
-  
+
       if (postArray.length > 0){
+
+        // updating the state with the fetched data
         
         setPostObj((prevTweets) => {
-          // setting userDetail to the tweet
           return postArray.map((tweet) => ({ tweet: tweet.tweet, userDetails: userProfileObj }));  
         
       })
       }
+
  
       
     } catch (error) { 
@@ -41,6 +45,9 @@ export default function ProfilePost({userProfileObj}) {
 
   return (
     <div>
+
+
+
       <div className="tweet-list">
         {userProfileObj && postObj?.map((tweet, key) => (
             <div className='tweet-card'> 

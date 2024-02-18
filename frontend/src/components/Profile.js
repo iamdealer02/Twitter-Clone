@@ -9,6 +9,7 @@ import ProfilePost from './ProfilePost';
 import ProfileReplies from './ProfileReplies';
 import ProfileLike from './ProfileLike';
 import ProfileMedia from './ProfileMedia';
+import PostCount from './PostCount';
 import FollowBtn from './FollowBtn';
 
 export default function Profile() {
@@ -49,9 +50,6 @@ export default function Profile() {
         const userData = userArray[0];
         console.log(userData)
 
-        // const imgData = userData.cover_picture.data;
-        // console.log("data:  ", imgData)
-        // console.log('cover pic data: ', userData.cover_picture.data)
 
        
         const joinedDate = new Date(userData.new_timestamp_column).toLocaleString('en-us', { month: 'long' }) + ' ' + new Date(userData.new_timestamp_column).getFullYear();
@@ -130,6 +128,9 @@ export default function Profile() {
   return (
     <div className="profileFeed">
     <div className="profile-box">
+      <div>
+        <PostCount/>
+      </div>
     <div className="cover-picture">
     {userProfileObj?.cover_picture && (
         <img src={userProfileObj?.cover_picture} alt="Cover" />)}
