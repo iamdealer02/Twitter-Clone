@@ -24,6 +24,12 @@
     width: 90%;
    
 }
+.emojiPicker{
+    margin-top: 1rem;
+    margin-left: 1rem;
+    cursor: pointer;
+    position: absolute;
+}
 
 
 .tweetInputForm, .tweetPollForm{
