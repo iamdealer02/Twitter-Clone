@@ -9,5 +9,6 @@ router.post('/addComment/:tweetId', tweetServices.addComment);
 router.post('/retweet/:ogTweetId', tweetServices.retweet);
 router.post('/repost/:ogTweetId', tweetServices.repost);
 router.post('/likeTweet/:tweetId', tweetServices.likeTweet);
+router.get('/trending/hashtags', tweetServices.trending_hashtags);
 
 module.exports = router;

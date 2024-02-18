@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const ProfileModel = require('../models/profileModel');
 
 const register = async (req, res) => {
+    console.log('req.body:', req.body)
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
         return res.status(statusCode.missingParameters)
