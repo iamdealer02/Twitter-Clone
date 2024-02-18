@@ -145,7 +145,7 @@
 
 
   .profile-tweet-card {
-    border-bottom: 2px solid #ffffff;
+    border-bottom: 1px solid #404041;
     border-radius: 5px;
     margin-bottom: 10px;  
    
@@ -154,8 +154,8 @@
 
   .comments {
     padding: 5px;
-    border: 1px solid #ccc;
-    background-color: #1f1f1f;
+    border: 1px solid #404041;
+    background-color: #141414;
     border-radius: 10px; 
   }
   

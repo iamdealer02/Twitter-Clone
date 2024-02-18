@@ -215,7 +215,7 @@ const viewLikes = async (req, res) => {
         let originalPoster = null;
 
         const likeData = likes.map(like => {
-            const liked = like.tweetId.likes.includes(user._id);
+            const liked = true;
             const bookmarked = user.bookmarks.includes(like.tweetId._id);
             
             return{tweet:{
@@ -235,7 +235,7 @@ const viewLikes = async (req, res) => {
                     retweet_count: like.tweetId.retweets?.length,
                     retweeted: false, 
                     like: like.tweetId.likes?.length,
-                    liked: liked ? true : false,
+                    liked: liked ,
                     bookmarked: bookmarked ? true : false,
                     comment_count: like.tweetId.comments?.length,
                     is_repost: like.tweetId.is_repost || false,
