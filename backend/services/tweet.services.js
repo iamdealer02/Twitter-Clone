@@ -82,7 +82,6 @@ const getTweet = async (req, res) => {
         const tweets = await TweetModel.find().sort({ createdAt: -1 }).populate('reposted_from').exec();
 
 
-
         // Fetch user details for each tweet and populate tweetsData array
         const tweetsData = await Promise.all(tweets.map(async (tweet) => {
            
@@ -100,6 +99,7 @@ const getTweet = async (req, res) => {
                 originalPoster = await profileModel.findOne({ username: tweet.reposted_from.username });
             }   
 
+
             return { tweet:{
                 _id: tweet._id,
                 username : tweet.username,
@@ -109,14 +109,15 @@ const getTweet = async (req, res) => {
                 emoji : tweet.emoji || null,
                 schedule : tweet.schedule || null,
                 poll: { question: tweet.poll.question, options: tweet.poll.options },
-                media : tweet.media,
+                media: tweet.media || null,
                 retweet_count: tweet.retweets?.length,
                 retweeted: retweeted ? true : false,
+                liked: liked? true : false,
                 like : tweet.likes?.length,
-                liked: liked ? true : false,
+                bookmarked: bookmarked? true : false,
                 comment_count : tweet.comments?.length,
                 is_repost : tweet.is_repost || false,
-                bookmarked: bookmarked ? true : false,
+            
                 createdAt: tweet.createdAt,
                 reposted_from : {
                     tweet: {
