@@ -1,74 +1,60 @@
-import React, { useState, useEffect } from 'react'
-import '../styles/settings.css'
-import { useNavigate } from 'react-router-dom'
-import instance from '../constants/axios';
-
+import React, { useState } from 'react';
+import '../styles/settings.css';
+import ChangePassword from './ChangePassword'; 
 
 export default function Settings() {
-    const username = JSON.parse(localStorage.getItem('user')).username;
-    const navigate = useNavigate();
 
+    //state variable to track current active tab
+    const [currentTab, setCurrentTab] = useState('settings'); 
 
-    const [ isMonitized, setIsMonetized] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-
-        const fetchMonetizationStatus = async () => {
-            try {
-                const response = await instance.get(`/settings/monetizationStatus/${username}`);
-                setIsMonetized(response.data.isMonetized);
-            } catch (error) {
-                console.error('Error fetching monetization status:', error);
-            }
-            setLoading(false);
-        };
-
-        fetchMonetizationStatus();
-    }, [username]);
-
-    const handleMonetization = async () => {
-        try {
-            const response = await instance.put(`/settings/updateMonetizationStatus/${username}`);
-            setIsMonetized(response.data.isMonetized);
-        } catch (error) {
-            console.error('Error toggling monetization status:', error);
-        }
+    const handleTabClick = (tabName) => {
+        setCurrentTab(tabName); 
     };
 
 
-  return (
-    <div>
+    // rendering the content of the active tab based on the current tab state
+    const renderTabContent = () => {
+        // switch statement to determine current active tab
+        switch (currentTab) {
 
-        <div className="settingsFeed">
-            <div className="settings-box">
-         
-            <h3>Settings</h3>
+          case 'changePassword':
+            // resnder respective component
+            return <ChangePassword />;
+
+
+          default:
+            return null;
+        }
+    };
+
+    return (
+        <div>
+            <div className="settingsFeed">
+                <div className="settings-box">
+                    <h3>Settings</h3>
+                </div>
+                <div className="settings-content">
+                <ul className="tabs">
+
+                    {/* set the class based on whetehr the current tab is that particular class  and attach an event handler to handle tab clicks*/}
+
+            <li className={currentTab === 'changePassword' ? 'active-tab' : 'inactive-tab'} onClick={() => handleTabClick('changePassword')}>
+              Change Password
+            </li>
+            <li className={currentTab === 'privacy' ? 'active-tab' : 'inactive-tab'} onClick={() => handleTabClick('privacy')}>
+              Privacy Settings
+            </li>
+            <li className={currentTab === 'terms' ? 'active-tab' : 'inactive-tab'} onClick={() => handleTabClick('terms')}>
+              Terms and Conditions
+            </li>
+            <li className={currentTab === 'monetization' ? 'active-tab' : 'inactive-tab'} onClick={() => handleTabClick('monetization')}>
+              Monetization
+            </li>
+          </ul>
+       
+                    {renderTabContent()}
+                </div>
             </div>
-
-            <div className="settings-content">
-            
-            <div className="account-info" onClick={ () => navigate(`/profile/edit/${username}`)}>
-                Your account
-            </div>
-
-
-            <div className="change-password">
-                Change password
-            </div>
- 
-            <div className="monetization" onClick={ () => navigate(`/settings/updateMonetizationStatus/${username}`)}>
-                Monetization
-            </div>
-
-            
-
-
-            </div>
-            </div>  
-           
-     
-      
-    </div>
-  )
+        </div>
+    );
 }
