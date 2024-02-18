@@ -40,6 +40,15 @@ const createTweet = async (req, res) => {
         if (!decodedToken) {
             return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
         }
+        // if tweet exists, checking if there are hashtags
+        let hashtagArray = null;
+        if (tweet) {
+            hashtags = tweet.match(/#\w+/g);
+            console.log(hashtags);
+            // making an array of hashtags
+            hashtagArray = hashtags?.map(hashtag => hashtag.slice(1));
+        }
+     
 
         // MAKE poll options by changing json
          pollData = JSON.parse(poll);
@@ -54,6 +63,7 @@ const createTweet = async (req, res) => {
                 emoji,
                 poll: { question: pollData.question, options: pollOptions },
                 media: imageUrl ? imageUrl : null,
+                hashtags: hashtagArray,
           
             });
     
@@ -382,7 +392,59 @@ const getTweet = async (req, res) => {
             return res.status(statusCode.queryError).json({ message: 'Error while liking/unliking the tweet' });
         }
     };
+    // getting trending or most used hashtags
+    const trending_hashtags = async (req, res) => {
+        // const token = req.headers.authorization.split(' ')[1];
+        // const decodedToken = jwt.decode(token);
+        
+        // if (!decodedToken) {
+        //     return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
+        // }
+        // // find the most used hashtags
+        try{
+            const hashtags = await TweetModel.aggregate([
+                // getting hashtags in higher order
+                { $unwind: '$hashtags' },
+                { $group: { _id: '$hashtags', count: { $sum: 1 } } },
+                { $sort: { count: -1 } },
+                { $limit: 10 }
+            ]);
+            // sending only the hashtags
+            return res.status(statusCode.success).json({ hashtags });
+        }
+        catch (error) {
+            logger.error('Error while retrieving the trending hashtags', error);
+            return res.status(statusCode.queryError).json({ message: 'Error while retrieving the trending hashtags' });
+        }
+    }
     
+    // getting a particular tweet and its comments
+    const getTweetById = async (req, res) => {
+        const { tweetId } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.decode(token);
+        if (!decodedToken) {
+            return res.status(statusCode.unauthorized).json({ message: 'Session Expired' });
+        }
+        const username = decodedToken.id;
+        try {
+            const tweet = await TweetModel.findOne({ _id: tweetId }).populate('comments').exec();
+            // get the user details of the tweet
+            // users who have posted the comment
+            // tweet, userDetails, comments{ comment, userDetails}
+            const user = await profileModel.findOne({ username: tweet.username });
+            const userDetails = { username: user.username, name: user.name, profile_picture: user.profile_picture };
+            const comments = await Promise.all(tweet.comments.map(async (comment) => {
+                const user = await profileModel.findOne({ _id: comment.userId });
+                return { comment: comment.content, userDetails: { username: user.username, name: user.name, profile_picture: user.profile_picture } };
+            }));
+            const userProfileObj = await profileModel.findOne({ username: username });
+            return res.status(statusCode.success).json({ tweet: { tweet, userDetails }, comments, userProfileObj:{_id:userProfileObj._id, username: userProfileObj.username, name: userProfileObj.name, profile_picture: userProfileObj.profile_picture    } });
+        } catch (error) {
+            logger.error('Error while retrieving the tweet and comments', error);
+            return res.status(statusCode.queryError).json({ message: 'Error while retrieving the tweet and comments' });
+        }
+    };
     
 module.exports = {
     createTweet,
@@ -390,6 +452,8 @@ module.exports = {
     addComment,
     retweet,
     repost,
-    likeTweet
+    likeTweet,
+    trending_hashtags,
+    getTweetById
 
 };

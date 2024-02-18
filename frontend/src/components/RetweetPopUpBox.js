@@ -1,37 +1,50 @@
 import React from 'react';
 import { requests} from '../constants/requests';
 import instance from '../constants/axios';
+import useSocket from '../hooks/useSocket';
 
 export default function RetweetPopUpBox({retweetOption, setRetweetOption, handleQuote, tweetId, setTweets, retweeted}) {
+  const {state} = useSocket();
+  const socket = state.socket;
   const retweet = () => {
     // send tweetId to backend
     // close the retweetOption
-    setRetweetOption(!retweetOption)
-    const token = JSON.parse(localStorage.getItem('user')).token;
-    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    instance.post(requests.retweet + '/' + tweetId)
-    .then(response => {
-      setTweets(prevTweets => {
-        return prevTweets.map(tweetItem => {
-            if (tweetItem.tweet._id === tweetId) {
-                return {
-                    ...tweetItem,
-                    tweet: {
-                        ...tweetItem.tweet,
-                        retweet_count: response.data.tweet.retweet_count,
-                        retweeted : response.data.tweet.retweeted
-                    }
-                }
-              
-            }
-            return tweetItem;
-        });
-    });
-    })
-    .catch(error => {
-      console.log('error:', error);
-    });
-
+    try{
+      setRetweetOption(!retweetOption)
+      const token = JSON.parse(localStorage.getItem('user')).token;
+      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      instance.post(requests.retweet + '/' + tweetId)
+      .then(response => {
+        setTweets(prevTweets => {
+          return prevTweets.map(tweetItem => {
+              if (tweetItem.tweet._id === tweetId) {
+                  return {
+                      ...tweetItem,
+                      tweet: {
+                          ...tweetItem.tweet,
+                          retweet_count: response.data.tweet.retweet_count,
+                          retweeted : response.data.tweet.retweeted
+                      }
+                  }
+                
+              }
+              return tweetItem;
+          });
+      });
+      const type='retweet';
+      const data = {
+          tweetId: tweetId, retweet_count: response.data.tweet.retweet_count}
+      socket.emit('live_feed', {type, data});
+  
+      })
+      .catch(error => {
+        console.log('error:', error);
+      });
+  
+    } catch(error) {
+      console.log(error);
+      
+    }
   }
 
   return (

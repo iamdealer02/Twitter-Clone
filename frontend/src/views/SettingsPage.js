@@ -3,6 +3,7 @@ import '../styles/settings.css'
 import TaskBar from '../components/TaskBar'
 import Settings from '../components/Settings'
 import SearchBar from '../components/SearchBar'
+import ChangePassword from '../components/ChangePassword'
 
 
 function SettingsPage() {

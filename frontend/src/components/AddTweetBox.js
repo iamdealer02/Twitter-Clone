@@ -3,7 +3,9 @@ import '../styles/addTweetBox.css'
 import axios from 'axios';
 import instance from '../constants/axios'  // axios instance
 import {requests} from '../constants/requests'  // api endpoints
-
+import useSocket from '../hooks/useSocket'
+import  Picker  from '@emoji-mart/react';
+import emojiData from '@emoji-mart/data';
 
 
 
@@ -11,6 +13,9 @@ import {requests} from '../constants/requests'  // api endpoints
 export default function AddTweetBox({setTweets, userProfileObj}) {
     const [imageURL, setImageURL] = useState('');
     const [videoUrl, setVideoUrl] = useState('');
+    const [pickerDisplay, setPickerDisplay] = useState(false);
+    const {state} = useSocket();
+    const socket = state.socket;
     const [tweetObj, setTweetObj] = useState({
         tweet: '',
         image: '',
@@ -19,11 +24,13 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
             question: '',
             options: ['', ''],
         },
-        emoji: null,
+        
         schedule: null,
     })
-
-
+    const handleEmojiPicker = (emoji) => {
+        // Append the selected emoji to the tweet in tweetObj
+        setTweetObj({ ...tweetObj, tweet: tweetObj.tweet + emoji.native });
+    };
 
     const handleTweetSubmit = async (e) => {
         e.preventDefault();
@@ -40,6 +47,7 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
         formData.append('schedule', tweetObj.schedule);
         // Append image file
         formData.append('image', tweetObj.image);
+        // sending everyone connected to the socket the tweet and the userDetails
 
 
         try {
@@ -58,6 +66,9 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
             setTweets((prevTweets) => {
                 return [{ tweet: response.data.tweet, userDetails: userProfileObj }, ...prevTweets];
             });
+            const type = 'tweet';
+            const data = { tweet: response.data.tweet, userDetails: userProfileObj };
+            socket.emit('live_feed',  {type,data} );
             // Reset tweetObj state
             setTweetObj({
                 tweet: '',
@@ -127,18 +138,6 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
     };
     
 
-
-    // const searchEmojis = async () => {
-    //     try {
-    //         const apiKey = 'UgmwxIMrBeWlHyvQmTJDKFkdOJ2Gt2eT';
-    //         const url =`https://api.giphy.com/v2/emoji?api_key=${apiKey}&limit=50&offset=0`
-    //         const response = await axios.get(url);
-    //         console.log(response.data.data);
-    //     }catch (error) {
-    //         console.error('Error fetching GIFs:', error);
-    //     }
-
-    // }
 
 
   return (
@@ -264,11 +263,30 @@ export default function AddTweetBox({setTweets, userProfileObj}) {
                     <button className='tweetPoll tweetbtn' onClick={() => {setOpenPoll(!openPoll); setTweetObj({...tweetObj, image: '', gif: ''});}}>
                         <svg className='iconsvg' viewBox="0 0 24 24" fill='#1D9BF0 ' aria-hidden="true" ><g><path d="M6 5c-1.1 0-2 .895-2 2s.9 2 2 2 2-.895 2-2-.9-2-2-2zM2 7c0-2.209 1.79-4 4-4s4 1.791 4 4-1.79 4-4 4-4-1.791-4-4zm20 1H12V6h10v2zM6 15c-1.1 0-2 .895-2 2s.9 2 2 2 2-.895 2-2-.9-2-2-2zm-4 2c0-2.209 1.79-4 4-4s4 1.791 4 4-1.79 4-4 4-4-1.791-4-4zm20 1H12v-2h10v2zM7 7c0 .552-.45 1-1 1s-1-.448-1-1 .45-1 1-1 1 .448 1 1z"></path></g></svg>
                     </button>
-                    <button className='tweetEmoji tweetbtn' >
+                    <button className='tweetEmoji tweetbtn ' onClick={()=>{setPickerDisplay(!pickerDisplay)}} >
                         <svg className='iconsvg' viewBox="0 0 24 24" fill='#1D9BF0 ' aria-hidden="true" ><g><path d="M8 9.5C8 8.119 8.672 7 9.5 7S11 8.119 11 9.5 10.328 12 9.5 12 8 10.881 8 9.5zm6.5 2.5c.828 0 1.5-1.119 1.5-2.5S15.328 7 14.5 7 13 8.119 13 9.5s.672 2.5 1.5 2.5zM12 16c-2.224 0-3.021-2.227-3.051-2.316l-1.897.633c.05.15 1.271 3.684 4.949 3.684s4.898-3.533 4.949-3.684l-1.896-.638c-.033.095-.83 2.322-3.053 2.322zm10.25-4.001c0 5.652-4.598 10.25-10.25 10.25S1.75 17.652 1.75 12 6.348 1.75 12 1.75 22.25 6.348 22.25 12zm-2 0c0-4.549-3.701-8.25-8.25-8.25S3.75 7.451 3.75 12s3.701 8.25 8.25 8.25 8.25-3.701 8.25-8.25z"></path></g></svg>
+                        
                     </button>
+                    {
+    pickerDisplay ? (
+        <div className='emojiPicker'>
+            <Picker
+                set="twitter"
+                showPreview={false} 
+                onSelect={(emoji) => {
+                    handleEmojiPicker(emoji);
+                    setPickerDisplay(!pickerDisplay);
+                }}
+            />
+        </div>
+    ) : null
+}
+                    
                     <button className='tweetSchedule tweetbtn'>
                         <svg className='iconsvg' viewBox="0 0 24 24" fill='#1D9BF0 ' aria-hidden="true"><g><path d="M6 3V2h2v1h6V2h2v1h1.5C18.88 3 20 4.119 20 5.5v2h-2v-2c0-.276-.22-.5-.5-.5H16v1h-2V5H8v1H6V5H4.5c-.28 0-.5.224-.5.5v12c0 .276.22.5.5.5h3v2h-3C3.12 20 2 18.881 2 17.5v-12C2 4.119 3.12 3 4.5 3H6zm9.5 8c-2.49 0-4.5 2.015-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.01-4.5-4.5-4.5zM9 15.5C9 11.91 11.91 9 15.5 9s6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5S9 19.09 9 15.5zm5.5-2.5h2v2.086l1.71 1.707-1.42 1.414-2.29-2.293V13z"></path></g></svg>
+
+
+
                     </button>
             </div>
             {tweetObj.tweet || tweetObj.image || tweetObj.gif || isPollValid ?  ( <div className='postBtnContainer'>

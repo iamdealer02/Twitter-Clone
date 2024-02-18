@@ -2,11 +2,13 @@ import React from 'react'
 import '../styles/miniUserDetails.css'
 import Tweet from './Tweet'
 import Poll from './Poll'
+// navigate
+import { useNavigate } from 'react-router-dom';
 
 export default function MiniUserDetail({ user,tweet, createdAt,setTweets }) { // Destructure 'user' from props
     // single tweet object
     const { profile_picture, name, username } = user;
- 
+    const navigate = useNavigate();
     // function to display the date / hours ago
     const timeAgo = (date) => {
         const now = new Date();
@@ -26,7 +28,7 @@ export default function MiniUserDetail({ user,tweet, createdAt,setTweets }) { //
     };
     const date = timeAgo(createdAt);
     return (
-        <div className='tweet-Body'>
+        <div className='tweet-Body' onClick={()=> {navigate(`/tweet/${tweet._id}`)}}>
         <div className='userDetails'>
             <div className='profilePic'>
                 {profile_picture   ?  
@@ -40,12 +42,14 @@ export default function MiniUserDetail({ user,tweet, createdAt,setTweets }) { //
                 <div className='userName'> @ {username}</div>
                 <div className='createdAt'>.{date}</div>
             </div>
+            
+         
             {
                 tweet?.is_poll ? (<Poll  tweet={tweet} tweet_id={tweet._id} setTweets={setTweets}  />) : 
                 <Tweet tweet={tweet} setTweets={setTweets} />
             
               }    
-              </div> 
+            </div> 
         </div>
         
 

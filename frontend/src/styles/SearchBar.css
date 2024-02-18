@@ -3,7 +3,7 @@
 }
 
 .searchArea input{
-    background-color: rgb(32, 35, 39);
+    background-color: rgb(22, 24, 28);
     color: white !important;
     border: transparent;
     width: 80%;
@@ -47,7 +47,7 @@
     display: flex;
     flex-direction: row;
     padding: 2%;
-    width: 100%;
+    width: 90%;
     margin: 2%;
 }
 .profilePic img{

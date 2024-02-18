@@ -178,6 +178,7 @@
   .tab-buttons {
     display: flex;
     justify-content: space-around;
+    border-bottom: 1px solid #404041;
   }
   
   .tab-buttons button {

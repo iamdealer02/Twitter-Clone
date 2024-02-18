@@ -117,18 +117,22 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-   
-    if (req.session.user){
-        delete req.session;
-        logger.info(`User logged out successfully`);
-        return res.status(statusCode.success).
-        json({ message: 'User logged out successfully' });
-
+    if (req.session.profileId) {
+        delete req.session.profileId;
+        req.session.destroy((err) => {
+            if (err) {
+                logger.error('Error destroying session:', err);
+                return res.status(statusCode.serverError).json({ message: 'Error logging out' });
+            }
+            logger.info('User logged out successfully');
+            return res.status(statusCode.success).json({ message: 'User logged out successfully' });
+        });
+    } else {
+        logger.info('User logged out successfully');
+        return res.status(statusCode.success).json({ message: 'User logged out successfully' });
     }
-    logger.error('No session found');
-    return res.status(statusCode.badRequest).
-    json({ message: 'No session found' });
-}
+};
+
 
 
 module.exports = {

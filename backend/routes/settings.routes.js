@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const settingsServices = require ('../services/settings.services')
 
-const profileServices = require('../services/profile.services');
-const { route } = require("./auth.routes");
-
-
-
-
+router.post('/changePassword/:username', settingsServices.changePassword );
 
 module.exports = router;

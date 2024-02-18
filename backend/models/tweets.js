@@ -33,6 +33,10 @@ const tweetSchema = new mongoose.Schema({
         type: Date,
 
     },
+    // array of hashtags
+    hashtags: [{
+        type: String,
+    }],
 
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Like' }],
     retweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Retweet' }],
