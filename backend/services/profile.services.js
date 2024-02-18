@@ -269,6 +269,7 @@ const getBookmarks = async (req, res) => {
                     content: bookmark.tweet || null,
                     tweet: bookmark.tweet || null,
                     image: bookmark.image || null,
+                    is_poll: bookmark.is_poll,
                     poll: bookmark.poll || null,
                     createdAt: bookmark.createdAt,
                     gif : bookmark.gif || null,

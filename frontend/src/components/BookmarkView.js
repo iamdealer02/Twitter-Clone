@@ -35,22 +35,22 @@ console.log(username);
 
   return (
     <div className="bookmarks-container">
-      <h1 className="bookmarks-heading">Bookmarks</h1>
+      <span className="bookmarks-heading">Bookmarks</span>
       {bookmarks ? (
         <div>
           <h2>{bookmarks.username}</h2>
-          <ul className="bookmarks-feed">
+          <div className="bookmarks-feed">
             {
               bookmarks.map((tweet, index) => {
                 return (
-                  <li key={index} className="bookmarks-tweet">
+                  <div key={index} className="bookmarks-tweet">
                     <MiniUserDetail key={tweet.tweet._id} user={tweet.userDetails} tweet={tweet.tweet} createdAt={tweet.tweet.createdAt} />
                     <InteractionButtons tweet={tweet} userProfileObj={currentUser} setTweets={setBookmarkTweets} />
-                  </li>
+                  </div>
                 );
               })
             }
-          </ul>
+          </div>
         </div>
       ) : (
         <p className="loading-message">Loading bookmarks...</p>

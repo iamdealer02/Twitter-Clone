@@ -7,11 +7,13 @@
 }
 
 .bookmarks-heading {
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #ebf0f5;
   width: 100%;
   text-align: left;
   padding: 1rem; /* Adjust padding for better alignment */
+  margin-bottom: 0;
 }
 
 .bookmarks-feed {
@@ -22,7 +24,7 @@
   font-size: 1rem;
   color: #e5e3e3;
   width: 100%;
-  padding: 0.75rem 1rem; /* Increase padding for better spacing */
+  /* Increase padding for better spacing */
   border-bottom: solid #2f3336;
 }
 

@@ -3,7 +3,7 @@ import TaskBar from '../components/TaskBar'
 import BookmarkView from '../components/BookmarkView'
 import '../styles/bookmarkPage.css'
 import '../styles/bookmarkView.css'
-
+import SearchBar from '../components/SearchBar'
 
 function BookmarkPage() {
   return (
@@ -15,10 +15,13 @@ function BookmarkPage() {
 
         <div className='bookmarkFeed'>
           <BookmarkView/>  
-              {/* Content for bookmarks view */}
+           
+          </div>
+          <div className='homeWidgets'>
+                <SearchBar/>
             </div>
 
-            {/* Add more views here if needed */}
+           
           </div>                     
         </div>
   );
