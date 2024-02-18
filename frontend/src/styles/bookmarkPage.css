@@ -1,0 +1,39 @@
+/* bookmarkPage.css */
+
+/* Container styles */
+.bookmarkContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Taskbar styles */
+  .taskbarcontainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 70vh;  }
+  
+  /* Feed styles */
+  .bookmarkFeed {
+    width: 100%; /* Adjust width as needed */
+    max-width: 1200px; /* Example maximum width */
+    padding: 20px; /* Example padding */
+    box-sizing: border-box;
+  }
+  
+  /* Views container */
+  .views {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px; /* Example margin */
+  }
+  
+  /* Bookmarks view */
+  .bookmarks {
+    width: 70%; /* Adjust width as needed */
+  }
+  
+  /* Add more view styles here if needed */
+  

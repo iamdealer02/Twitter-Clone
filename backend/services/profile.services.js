@@ -183,60 +183,62 @@ const voteInPoll = async (req, res) => {
     }
 };
 
+
+
 const postBookmarks = async (req, res) => {
+    // Extract the 'bookmarks' parameter from the request
     const {bookmarks} = req.params
+    
+    // Extract the token from the request headers and decode it to get the user's username
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.decode(token);
-    
     const username = decodedToken.id;
+    
+    // Check if the token is valid
     if (!decodedToken) {
+        // If token is invalid, return an unauthorized response
         return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
     } 
 
-
-    try{
-        // un bookmarking
+    try {
+        // Check if the user has already bookmarked the tweet
         const userFetch = await profileModel.findOneAndUpdate(
-            { username: username, bookmarks: bookmarks  },
-            { $pull: { bookmarks: bookmarks } },
+            { username: username, bookmarks: bookmarks  }, // Query to find the user with the specific bookmark
+            { $pull: { bookmarks: bookmarks } }, // Pull the bookmark from the user's bookmarks array
             { returnOriginal: false }
         );
-        const response = {
-            "bookmarked": false, 
-        }
-        
+
+        // Prepare the response object
+        const response = { "bookmarked": false };
 
         if (!userFetch) {
+            // If the tweet is not bookmarked by the user, add it to bookmarks
             const userFetch = await profileModel.findOneAndUpdate(
-                { username: username },
-                { $addToSet: { bookmarks: bookmarks } },
+                { username: username }, // Query to find the user
+                { $addToSet: { bookmarks: bookmarks } }, // Add the bookmark to the user's bookmarks array
                 { returnOriginal: false }
             );
-            const response = {
-                "bookmarked": true,
-            }
-// send the response
-
+            // Update the response object
+            const response = { "bookmarked": true };
+            // Send the response indicating successful bookmarking
             return res.status(statusCodes.success).json({ message: 'Bookmarked!', response :response });
         }   
+        // Send the response indicating successful unbookmarking
         return res.status(statusCodes.success).json({ message: 'Unbookmarked!', response: response });
 
     } catch (error) {
+        // Handle any errors and send an internal server error response
         console.error('error saving bookmarks:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
-
-
 };
-
-
 
 
 const getBookmarks = async (req, res) => {
     const {username} = req.params;
 
     try{
-        const  userFetch = await profileModel.findOne({ username}).populate('bookmarks');
+        const  userFetch = await profileModel.findOne({ username }).populate('bookmarks');
         return res.status(200).json({ message: userFetch})
         
 
@@ -247,6 +249,7 @@ const getBookmarks = async (req, res) => {
     }
 
 };
+
 
 
 const followUser = async(req, res) => {

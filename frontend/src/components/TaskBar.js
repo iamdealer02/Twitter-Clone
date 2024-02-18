@@ -103,7 +103,7 @@ export default function TaskBar() {
                         </g>
                     </svg>
                 </div>
-                <div className='taskBarText'>
+                <div className='taskBarText' onClick={ () => navigate(`/bookmarkview/${username}`)}>
                     Bookmarks
                 </div>
             </div>

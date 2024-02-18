@@ -12,6 +12,8 @@ import FollowersPage from './views/FollowersPage';
 import FollowingPage from './views/FollowingPage';
 import SettingsPage from './views/SettingsPage';
 import WelcomePage from './views/WelcomePage';
+import BookmarkPage from './views/BookmarkPage';
+
 
 
 function App() {
@@ -30,6 +32,9 @@ function App() {
           </Route>
           <Route element={<PrivateRoute/>}>
             <Route path="/home" element={<HomePage/>}/>
+          </Route>
+          <Route element={<PrivateRoute/>}>
+            <Route path="/bookmarkview/:username" element={<BookmarkPage/>}/>
           </Route>
 
           <Route element={<PrivateRoute />}>
