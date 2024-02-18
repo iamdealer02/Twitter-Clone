@@ -1,0 +1,57 @@
+.trending-hashtags {
+border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+width: 75%;
+  margin: 4%;
+    padding: 2%;
+    background-color: rgb(32, 35, 39);
+    border-radius: 20px;
+}
+
+.trending-hashtags-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #f6f6f7;
+  margin-bottom: 1rem;
+}
+
+.trending-hashtags-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.trending-hashtags-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.trending-hashtags-item:hover {
+    background-color: rgb(42, 46, 50);
+
+}
+.no-trending{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f6f6f7;
+    margin-bottom: 1rem;
+}
+
+.hashtag-keyword {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f6f6f7;
+}
+.hashtag-count {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #8b8b8e;
+}
+.hashtag-trending {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #8b8b8e;
+}

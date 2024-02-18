@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from '../components/SearchBar'
 import Recommendation from '../components/Recommendation'
 import useSocket from '../hooks/useSocket' 
+import TrendingHashtags from '../components/TrendingHashtags'
 
 function HomePage() {
     const notify = (message) => toast.error(message); 
@@ -33,6 +34,7 @@ function HomePage() {
         fetchTweets(); 
   
       }, []); 
+      
 
 
       useEffect(() => {
@@ -194,6 +196,8 @@ function HomePage() {
             <div className='homeWidgets'>
                 <SearchBar/>
                 <Recommendation/>
+                <TrendingHashtags/>
+               
             </div>
         </div>
     </div>
