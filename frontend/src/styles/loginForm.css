@@ -1,0 +1,15 @@
+.logoDisplayLogin {
+    width: 3rem;
+height: 3rem;
+margin-top: 5rem;
+margin-left: 40%;
+
+}
+.formLogoLogin{
+    display: flex;
+flex-direction: column ;
+justify-content: center;
+max-width:400px;
+margin-left: auto;
+margin-right: auto;
+}

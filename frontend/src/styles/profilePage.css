@@ -1,0 +1,218 @@
+.profileContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 10rem;
+    padding-left: 10rem;
+
+
+
+}
+
+
+.profileTaskbar{
+    flex: 1;
+}
+
+.profileFeed{
+    border: rgb(47, 51, 54) solid 1px;
+
+    flex: 3 1;
+}
+
+.profileWidgets{
+    flex: 2;
+}
+
+.profile-box{
+    border-bottom: rgb(47, 51, 54) solid 1px;
+    padding: 1rem;
+
+}
+ 
+.cover-picture{
+    background-color: #8f8f8f;
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+   
+}
+.cover-picture img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+  
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    background-size: cover;    
+    border-radius: 50%;
+    border: 3px solid #fff;
+    margin-top: -40%;
+    background-color: white;
+  
+    
+
+}
+.profile-picture img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+ 
+.edit-profile {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgb(83, 100, 113);
+    text-overflow: unset;
+    color: rgb(239, 243, 244);
+    font-weight: 700;
+
+}
+
+
+.follow-btn button {
+
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.following-btn button {
+
+  background-color: #30313390;
+  color: #ffffff;
+}
+
+
+
+.edit-profile button{
+    margin-top: 20%;
+    border-radius: 9999px;
+    padding: 5%;
+    width: 120px;
+
+}
+  
+  .name {
+    font-size: 24px;
+    font-weight: bold;
+
+  }
+  
+  .username {
+    color: #555;
+    margin-top: 5px;
+  }
+
+  .location {
+    color: #555;
+    margin-top: 5px;
+  }
+
+  .followers-followings {
+    color: #555;
+    margin-top: 5px;
+  }
+
+
+  .joined-date {
+    color: #555;
+    margin-top: 5px;
+  }
+  
+  .bio {
+    margin-top: 10px;
+  }
+
+
+  .views-box {
+    display: inline-block;
+
+
+  }
+
+
+
+
+  .profileDetail{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+ 
+  }
+
+
+  .profile-tweet-card {
+    border-bottom: 1px solid #404041;
+    border-radius: 5px;
+    margin-bottom: 10px;  
+   
+  }
+  
+
+  .comments {
+    padding: 5px;
+    border: 1px solid #404041;
+    background-color: #141414;
+    border-radius: 10px; 
+  }
+  
+  .comment-content {
+    font-size: 20px; 
+    line-height: 1.5; 
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif; 
+  }
+  
+
+  .comment-date {
+    color: #6b6b6b; 
+    margin-right: 5px; 
+    font-size: 15px;
+  }
+  
+
+
+  .tab-buttons {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid #404041;
+  }
+  
+  .tab-buttons button {
+    border: none;
+    background-color: transparent;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #525252;
+  }
+  
+  .tab-buttons button.active {
+    font-weight: bold;
+    color: #ffffff;
+    font-weight: bold;
+
+  }
+  
+
+  .total-post-count {
+    background-color: #000000;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+ 

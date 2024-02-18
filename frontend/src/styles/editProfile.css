@@ -1,0 +1,99 @@
+.background-page {
+  display: flex;
+  background: rgba(146, 180, 183, 0.26);
+  justify-content: center;
+  padding-right: 10rem;
+  padding-left: 10rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: row;
+
+}
+
+
+.background-taskbar{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 70vh;
+}
+
+
+.background-profile {
+  border: rgb(47, 51, 54) solid 1px;
+  height: 100vh;
+  flex: 1 ;
+}
+
+.background-widgets{
+  flex: 2;
+}
+
+
+
+  .edit-form {
+    position: absolute;
+    z-index: 2; /* Ensure the form is above the background */
+    width: 400px; /* Set the width of your form */
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background for the form */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-bottom: rgb(47, 51, 54) solid 1px;
+    width: 600px;
+    height: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #272727;
+    background-color: #000000;
+    border-radius: 16px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+
+
+
+
+  .profile-form-fields {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom:8px;
+  }
+  
+  input {
+    display: flex;
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #272727;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  
+  button {
+
+    background-color: white;
+    color: black;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 9999px;
+    font-weight: 700;
+    margin-top: 5%;
+  }
+  
+  button:hover {
+    background-color: rgb(56, 55, 55);
+    color: white;
+    font-weight: 700;
+  }
+  

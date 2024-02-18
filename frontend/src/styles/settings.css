@@ -1,0 +1,114 @@
+.settingsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 10rem;
+    padding-left: 10rem;
+    padding-bottom: 2rem;
+}
+
+.settingsTaskbar {
+    flex: 1;
+}
+
+.settingsFeed {
+    border: rgb(47, 51, 54) solid 1px;
+    flex: 3 1;
+}
+
+.settingsWidgets {
+    flex: 2;
+}
+
+.settings-box {
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.settings-content {
+    margin-top: 20px;
+}
+
+.tabs {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #fff;
+}
+
+.tabs li:hover {
+    background-color: #333333;
+}
+
+.active-tab {
+    background-color: #333333;
+}
+
+.inactive-tab {
+    color: #5f5f5f;
+}
+
+.tab-content {
+    margin-top: 20px;
+}
+
+
+.changePasswordContainer {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+  
+  .changePasswordContainer h2 {
+    margin-bottom: 20px;
+  }
+  
+  .changePasswordContainer form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .changePasswordContainer form div {
+    margin-bottom: 15px;
+  }
+  
+  .changePasswordContainer label {
+    font-weight: bold;
+  }
+  
+  .changePasswordContainer input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  
+  .changePasswordContainer button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .changePasswordContainer button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    margin-top: 15px;
+  }
+  

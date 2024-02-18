@@ -1,0 +1,114 @@
+.noPersonalMessageSelected{
+    /* center the content vertically */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50%;
+    padding: 10%;
+}
+.noPersonalMessageSelected span{
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #f6f6f7;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+.noPersonalMessageSelected div{
+    font-size: 1rem;
+    font-weight: 400;
+    color: #8b8b8e;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+.messageHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+
+  
+}
+
+
+.messageInput textarea{
+    background-color: rgb(32, 35, 39);
+    color: white !important;
+    border: transparent;
+    padding: 1rem;
+    font-size: medium;
+    width: 80%;
+    height: 2px;     /* Set a minimum height to prevent it from becoming too small */
+    border-radius: 20px;
+    display: block;
+    word-break: break-word;
+    resize: none; /* Prevent manual resizing */
+    overflow-y: hidden;
+    font-size: 15px;
+
+}
+.messageInput textarea:focus{
+    outline: none;
+}
+
+.messageInput{
+    border: rgb(47, 51, 54) solid 1px;
+    background-color: rgb(32, 35, 39);
+    flex: 2;
+    border-radius: 20px;
+    padding:0.5%;
+    height: fit-content;
+}
+
+.personalMessageSelected{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    }
+.outerDiv{
+    height: 100%;
+}
+.messageBody{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 2%;
+}
+.messageSend button{
+    background-color: transparent;
+    border: none;
+    height: 80px;
+    cursor: pointer;
+    width: 30px;
+    
+  
+}
+
+.messageList{
+    overflow-y: auto;
+    flex-grow: 2;
+    scroll-behavior:auto;
+}
+/* Webkit browsers (Chrome, Safari, etc.) */
+.messageList::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+  }
+  
+  /* Track */
+  .messageList::-webkit-scrollbar-track {
+    background: #2f2f2f; /* Color of the scrollbar track */
+  }
+  
+  /* Handle */
+  .messageList::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar handle */
+  }
+  
+  /* Handle on hover */
+  .messageList::-webkit-scrollbar-thumb:hover {
+    background: #656565; /* Color of the scrollbar handle on hover */
+  }

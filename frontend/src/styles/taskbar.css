@@ -1,0 +1,75 @@
+.taskBarContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 70vh;
+    position: relative;
+ 
+    
+}
+
+/* for smaller screen remove all taskBar-text */
+@media (max-width: 1000px) {
+    .taskBarText {
+        display: none; 
+    }
+}
+.taskBarText{
+    font-size: 18px;
+    font-weight: 700;
+    color: #fffefe;
+}
+
+.taskbarUtil,
+.logout{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top : 5px;
+    padding-bottom : 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+
+
+}
+.taskbarUtil:hover{
+    background-color: #171616;
+    border-radius: 9999px;
+    cursor: pointer;
+}
+.taskBarIcon{
+    height: 30px;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+.taskBarTopLogo{
+    width: 2rem;
+    height: 2rem;
+    margin-top: 1rem;
+    margin-left: 40%;
+}
+
+.taskBarPostBtn{
+
+    background-color: #1da1f2;
+    color: #fffefe;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: none;
+    width: 200px;
+    height: 50px;
+    
+}
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .taskBarContainer {
+      flex: 0; /* Let it take up the space as needed */
+    }
+  }
+

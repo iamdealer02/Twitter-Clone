@@ -1,0 +1,207 @@
+.addTweetBox{
+    border-bottom: rgb(47, 51, 54) solid 1px;
+    padding: 1rem;
+}
+.tweetProfilePic{
+    width: 50px ;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+}
+.addTweetForm{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.tweetInputForm input, .tweetPollForm input{
+    background-color: black !important;
+    color: white !important;
+    border: transparent ;
+    padding: 1rem;
+    font-size: large;
+    width: 90%;
+   
+}
+.emojiPicker{
+    margin-top: 1rem;
+    margin-left: 1rem;
+    cursor: pointer;
+    position: absolute;
+}
+
+
+.tweetInputForm, .tweetPollForm{
+    width: 100%;
+    height: auto;
+}
+
+.tweetbtn{
+    background-color: transparent;
+    border: none;
+    max-width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+}
+.iconsvg{
+/* give css exactly like twitter icons */
+    color: rgb(29, 155, 240);
+    height: 20px;
+    max-width: 100%;
+    width: 20px;
+    cursor: pointer;
+}
+.tweetPostbtn{
+    /* push it to end oif the div */
+    margin-left: auto;
+    background-color: rgb(29, 155, 240);
+    color: white;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    margin-top: 1rem;
+}
+.tweetToolsContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-left:5rem;
+    border-top: rgb(47, 51, 54) solid 1px;
+
+}
+.cannotPostBtn{
+    background-color: rgb(29, 155, 240);
+    color: white;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    opacity: 0.5;
+    margin-top: 1rem;
+}
+.tweetTools{
+    margin-top: 1rem;
+}
+
+.inputImageDiv{
+    display: none;
+}
+
+.currentSelection img {
+    height: 30rem;
+    border-radius: 10px;
+    margin-top: 1%;
+    object-fit: cover;
+    
+}
+
+.currentSelection {
+    max-width: 600px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+
+}
+.closeCurrentSelection {
+    margin-left: auto; /* Pushes the close button to the right */
+    cursor: pointer;
+}
+
+.gifPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Adjust the width as needed */
+    max-width: 800px; /* Set a maximum width to prevent it from becoming too large */
+    max-height: 80vh; /* Limit the height to 80% of the viewport height */
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(1px);
+    display: flex;
+    justify-content: center;
+    z-index: 9999;
+    overflow-y: auto; /* Enable vertical scrolling */
+    
+}
+
+
+.gifContainer{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+}
+.gifContainer img{
+    width: 80%;
+    height: 80%;
+    cursor: pointer;
+}
+.gifHeader{
+    /* a X to close the popup */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    color: white;
+}
+.selectedGIF{
+    border: rgb(102, 183, 237) solid 1.5px;
+}
+
+.tweetPollForm{
+    display: flex ;
+    flex-direction: column;
+}
+.extraOption{
+    display: flex;
+    flex-direction: row;
+
+}
+.addOptionBtn{
+    background-color: transparent;
+    border: none;
+    color: rgb(29, 155, 240);
+    cursor: pointer;
+    font-size: 2rem;
+}
+.tweetPollOptions{
+    display: flex;
+    flex-direction: column;
+    border: rgb(47, 51, 54) solid 1px; 
+    padding: 2%;
+}
+.tweetPollOptions input{
+    border: rgb(47, 51, 54) solid 1px;
+    margin-top: 2%;
+
+}
+.tweetPollFooter{
+    height: 50px;
+    margin: 1%;
+    width: 100%;
+}
+.tweetPollFooter button{
+    background-color: rgb(29, 155, 240);
+    color: white;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+}
+
+.cannotUseBtns{
+    opacity: 0.5;
+}

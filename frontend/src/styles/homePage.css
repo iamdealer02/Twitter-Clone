@@ -1,0 +1,31 @@
+.homeContainer{
+    /* make it responsive */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 10rem;
+    padding-left: 10rem;
+    padding-bottom: 2rem;
+    
+}
+.homeTaskbar{
+    flex: 1;
+ 
+
+}
+.homeFeed{
+    flex: 2.5;
+    border: rgb(47, 51, 54) solid 1px;
+    min-height: 100vh;
+    height: fit-content;
+
+}
+.homeWidgets{
+    flex: 2;
+}
+/* Media query for tablets */
+@media (max-width: 768px) {
+    .bookmarkContent {
+      flex-direction: column;
+    }
+  }
