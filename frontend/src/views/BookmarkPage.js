@@ -1,6 +1,8 @@
 import React from 'react';
 import TaskBar from '../components/TaskBar'
 import BookmarkView from '../components/BookmarkView'
+import '../styles/bookmarkPage.css'
+import '../styles/bookmarkView.css'
 
 
 function BookmarkPage() {
@@ -13,16 +15,12 @@ function BookmarkPage() {
 
         <div className='bookmarkFeed'>
           <BookmarkView/>  
-          <div className="views">
-            <div className="bookmarks">
               {/* Content for bookmarks view */}
             </div>
 
             {/* Add more views here if needed */}
           </div>                     
         </div>
-      </div>
-    </div>
   );
 }
 

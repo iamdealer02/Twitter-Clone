@@ -5,6 +5,8 @@ const logger = require("../middleware/winston");
 const profileModel = require("../models/profileModel");
 const TweetModel = require("../models/tweets");
 const jwt = require("jsonwebtoken");
+const likeModel = require("../models/like");
+const retweetModel = require("../models/retweet");
 
 const fetchFromSql = async (username) => {
     const client = await pool.connect();
@@ -235,20 +237,82 @@ const postBookmarks = async (req, res) => {
 
 
 const getBookmarks = async (req, res) => {
-    const {username} = req.params;
-
-    try{
-        const  userFetch = await profileModel.findOne({ username }).populate('bookmarks');
-        return res.status(200).json({ message: userFetch})
-        
-
-    }catch(error){
-        console.error('error fetching bookmarks:', error);
-        return res.status(500).json({ error: 'Internal Server Error' })
-
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.decode(token);
+    const username = decodedToken.id;
+    if (!decodedToken) {
+        return res.status(statusCodes.unauthorized).json({ message: 'Session Expired' });
     }
+    
 
+    try {
+        const userFetch = await profileModel.findOne({ username }).populate('bookmarks');
+
+        // Process bookmarks and include user details
+        const bookmarks = await Promise.all(userFetch.bookmarks.map(async (bookmark) => {
+            // Fetch user details separately for each bookmark
+            const userDetails = await profileModel.findOne({ username: bookmark.username });
+
+            const liked = await likeModel.findOne({ tweetId: bookmark._id, userId: userFetch._id })
+            const retweeted = await retweetModel.findOne({ originalTweetId: bookmark._id, userId: userFetch._id })
+       
+            const bookmarked = true;
+            var originalPoster = null;
+            if (bookmark.is_repost) {
+                originalPoster = await profileModel.findOne({ username: bookmark.reposted_from.username });
+            }   
+
+
+            return {
+                tweet: {
+                    _id: bookmark._id,
+                    content: bookmark.tweet || null,
+                    tweet: bookmark.tweet || null,
+                    image: bookmark.image || null,
+                    poll: bookmark.poll || null,
+                    createdAt: bookmark.createdAt,
+                    gif : bookmark.gif || null,
+                    retweet_count: bookmark.retweets.length,
+                    is_repost : bookmark.is_repost,
+                    reposted_from: {tweet :
+                        {
+                        _id: bookmark.reposted_from?._id,
+                        is_poll: bookmark.reposted_from?.is_poll,
+                        tweet: bookmark.reposted_from?.tweet,
+                        gif: bookmark.reposted_from?.gif,
+                        emoji: bookmark.reposted_from?.emoji,
+                        schedule: bookmark.reposted_from?.schedule,
+                        poll: {question: bookmark.reposted_from?.poll.question, options: bookmark.reposted_from?.poll.options},
+                        media: bookmark.reposted_from?.media,
+                        createdAt: bookmark.reposted_from?.createdAt,
+                        },
+                        userDetails: {username: originalPoster?.username , name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
+                    },
+                    comment_count: bookmark.comments.length,
+                    like: bookmark.like?.length,
+                    liked: liked ? true : false,
+                    retweeted: retweeted ? true : false,
+                    retweet_count: bookmark.retweets?.length,
+                    bookmarked
+
+                },
+                userDetails: {
+                    _id: userDetails._id,
+                    username: userDetails.username,
+                    name: userDetails.name,
+                    profile_picture: userDetails.profile_picture
+                }
+            };
+        }));
+        res.status(statusCodes.success).json({ bookmarks, userProfileObj: { name: userFetch.name, username: userFetch.username, profile_picture: userFetch.profile_picture } });
+
+    } catch (error) {
+        console.error('Error fetching bookmarks:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
+
+
 
 
 
@@ -369,9 +433,7 @@ module.exports = {
     getUserProfile,
     editUserProfile,
     postBookmarks,
-    getBookmarks
-    
-,
+    getBookmarks,
     followUser,
     getFollowers,
     getFollowings,
