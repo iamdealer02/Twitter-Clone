@@ -287,8 +287,7 @@ const getBookmarks = async (req, res) => {
                     _id: bookmark._id,
                     content: bookmark.tweet || null,
                     tweet: bookmark.tweet || null,
-                    image: bookmark.image || null,
-                    is_poll: bookmark.is_poll,
+                     media: bookmark.media || null,
                     poll: bookmark.poll || null,
                     createdAt: bookmark.createdAt,
                     gif : bookmark.gif || null,
@@ -308,8 +307,8 @@ const getBookmarks = async (req, res) => {
                         },
                         userDetails: {username: originalPoster?.username , name: originalPoster?.name || null, userProfilePic: originalPoster?.profile_pic || null }
                     },
-                    comment_count: bookmark.comments.length,
-                    like: bookmark.like?.length,
+                    comment_count: bookmark.comments?.length,
+                    like: bookmark.likes?.length,
                     liked: liked ? true : false,
                     retweeted: retweeted ? true : false,
                     retweet_count: bookmark.retweets?.length,
@@ -331,6 +330,7 @@ const getBookmarks = async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 

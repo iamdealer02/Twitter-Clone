@@ -82,13 +82,6 @@ const getTweet = async (req, res) => {
         const tweets = await TweetModel.find().sort({ createdAt: -1 }).populate('reposted_from').exec();
 
 
-        // get every image from multer storage
-        tweets.forEach(tweet => {
-            if (tweet.media.data) {
-                tweet.media.data = tweet.media.data.toString('base64');
-            }
-        });
-
         // Fetch user details for each tweet and populate tweetsData array
         const tweetsData = await Promise.all(tweets.map(async (tweet) => {
            
@@ -116,7 +109,7 @@ const getTweet = async (req, res) => {
                 emoji : tweet.emoji || null,
                 schedule : tweet.schedule || null,
                 poll: { question: tweet.poll.question, options: tweet.poll.options },
-                media: { data: tweet.media?.data || null, contentType: tweet.media?.contentType },
+                media: tweet.media || null,
                 retweet_count: tweet.retweets?.length,
                 retweeted: retweeted ? true : false,
                 liked: liked? true : false,

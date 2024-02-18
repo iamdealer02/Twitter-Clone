@@ -11,27 +11,27 @@ export default function BookmarkView() {
   const [bookmarks, setBookmarkTweets] = useState(null);
   const [currentUser, setCurrentUser] = useState();
   const {username} = useParams();
-console.log(username);
-  useEffect(() => { 
-    const fetchBookmarkTweets = async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem('user')).token; // Get user token from localStorage 
-        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Set Authorization header with token
-        
-        const response = await instance.get(`${requests.getbookmark}/${username}}`); // Make GET request to fetch tweets
-        //console.log(response.data.bookmarks)
-        console.log(response);
-        setBookmarkTweets(response.data.bookmarks); // Set fetched tweets to state
-        setCurrentUser(response.data.userProfileObj);
-       
-      } catch (error) { 
-        console.error('Error fetching tweets:', error);
-      }
-    };
 
-    // Call the fetchBookmarks function when the component mounts
-    fetchBookmarkTweets();
-  }, [username]); // Fetch bookmarks whenever the username changes
+useEffect(() => { 
+  const fetchBookmarkTweets = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem('user')).token; // Get user token from localStorage 
+      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Set Authorization header with token
+      
+      const response = await instance.get(`${requests.getBookmark}/${username}}`); // Make GET request to fetch tweets
+      //console.log(response.data.bookmarks)
+      console.log(response);
+      setBookmarkTweets(response.data.bookmarks); // Set fetched tweets to state
+      setCurrentUser(response.data.userProfileObj);
+     
+    } catch (error) { 
+      console.error('Error fetching tweets:', error);
+    }
+  };
+
+  // Call the fetchBookmarks function when the component mounts
+  fetchBookmarkTweets();
+}, [username]); // Fetch bookmarks whenever the username changes
 
   return (
     <div className="bookmarks-container">
